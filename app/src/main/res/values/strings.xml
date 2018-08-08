@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">BattleShips++</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="one_app_game">Игра на одном усройстве</string>
+    <string name="online_game">Сетевая игра</string>
+    <string name="settings">Настройки</string>
+    <string name="main_menu">Главне меню</string>
+    <string name="pre_game">Расстановка кораблей</string>
+    <string name="game">Игра</string>
+    <string name="test">тест</string>
+</resources>
