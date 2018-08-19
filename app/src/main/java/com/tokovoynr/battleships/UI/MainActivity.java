@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.tokovoynr.battleships.R;
 import com.tokovoynr.battleships.UI.Lobby.ListFragment;
@@ -191,4 +192,27 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
     public void onFragmentInteraction(Uri uri) {
 
     }
+
+    @Override
+    public void onShopClick(View view)
+    {
+        Log.d(TAG, "onShopClick: start");
+        switch (view.getId())
+        {
+            case R.id.button_test_1:
+                //TODO вставь сюда что надо
+                break;
+            case R.id.button_test_2:
+                //
+                break;
+            case R.id.button_test_3:
+                //
+                break;
+            default:
+                break;
+        }
+
+    }
+
+
 }

@@ -4,16 +4,20 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.tokovoynr.battleships.R;
 
 
-public class ShopFragment extends Fragment {
+public class ShopFragment extends Fragment implements View.OnClickListener
+{
     public static final String TAG = "SHOP_FRAGMENT";
-    private View view;
+    private View rootView;
     private OnShopFragmentInteractionListener listener;
 
     public ShopFragment()
@@ -42,21 +46,18 @@ public class ShopFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        view = inflater.inflate(R.layout.fragment_shop, container, false);
+        rootView = inflater.inflate(R.layout.fragment_shop, container, false);
+        Button button1 = rootView.findViewById(R.id.button_test_1);
+        Button button2 = rootView.findViewById(R.id.button_test_2);
+        Button button3 = rootView.findViewById(R.id.button_test_3);
 
+        button1.setOnClickListener(this);
+        button2.setOnClickListener(this);
+        button3.setOnClickListener(this);
 
-        return view;
+        return rootView;
     }
 
-    public void onButtonPressed(Uri uri)
-    {
-        if (listener != null)
-        {
-            listener.onFragmentInteraction(uri);
-        }
-
-
-    }
 
     @Override
     public void onAttach(Context context)
@@ -70,8 +71,6 @@ public class ShopFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnShopFragmentInteractionListener");
         }
-
-
     }
 
     @Override
@@ -81,11 +80,17 @@ public class ShopFragment extends Fragment {
         listener = null;
     }
 
+    @Override
+    public void onClick(View view)
+    {
+        listener.onShopClick(view);
+    }
+
 
     public interface OnShopFragmentInteractionListener
     {
         void onFragmentInteraction(Uri uri);
 
-
+        void onShopClick(View view);
     }
 }
