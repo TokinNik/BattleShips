@@ -18,10 +18,11 @@
             android:text="@string/pre_game"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
-        <com.tokovoynr.battleships.TestView
+        <com.tokovoynr.battleships.UI.TestView
             android:id="@+id/testView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent" />
+
 
         <HorizontalScrollView
             android:layout_width="match_parent"

@@ -1,4 +1,4 @@
-package com.tokovoynr.battleships.UI;
+package com.tokovoynr.battleships.UI.Lobby;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,25 +11,25 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.tokovoynr.battleships.R;
-import com.tokovoynr.battleships.UI.dummy.DummyContent;
-import com.tokovoynr.battleships.UI.dummy.DummyContent.DummyItem;
+import com.tokovoynr.battleships.UI.Lobby.LobbyContent.LobbyItem;
 
-public class LobbyFragment extends Fragment
+public class ListFragment extends Fragment
 {
 
-    public static final String TAG = "LOBBY_FRAGMENT";
+    public static final String TAG = "LIST_FRAGMENT";
     private View view;
-    private int columnCount = 2;
-    private OnLobbyFragmentInteractionListener listener;
+    private int columnCount = 1;
+    private OnListFragmentInteractionListener listener;
 
-    public LobbyFragment()
+    public ListFragment()
     {
 
     }
 
-    public static LobbyFragment newInstance(int columnCount)
+
+    public static ListFragment newInstance(int columnCount)
     {
-        LobbyFragment fragment = new LobbyFragment();
+        ListFragment fragment = new ListFragment();
         return fragment;
     }
 
@@ -43,7 +43,7 @@ public class LobbyFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_lobby_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_list, container, false);
 
         if (view instanceof RecyclerView)
         {
@@ -56,7 +56,7 @@ public class LobbyFragment extends Fragment
             {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, columnCount));
             }
-            recyclerView.setAdapter(new MyLobbyRecyclerViewAdapter(DummyContent.ITEMS, listener));
+            recyclerView.setAdapter(new MyLobbyRecyclerViewAdapter(LobbyContent.ITEMS, listener));
         }
         return view;
     }
@@ -66,13 +66,13 @@ public class LobbyFragment extends Fragment
     public void onAttach(Context context)
     {
         super.onAttach(context);
-        if (context instanceof OnLobbyFragmentInteractionListener)
+        if (context instanceof OnListFragmentInteractionListener)
         {
-            listener = (OnLobbyFragmentInteractionListener) context;
+            listener = (OnListFragmentInteractionListener) context;
         } else
         {
             throw new RuntimeException(context.toString()
-                    + " must implement OnLobbyFragmentInteractionListener");
+                    + " must implement OnListFragmentInteractionListener");
         }
     }
 
@@ -83,9 +83,11 @@ public class LobbyFragment extends Fragment
         listener = null;
     }
 
-    public interface OnLobbyFragmentInteractionListener
+    public interface OnListFragmentInteractionListener
     {
 
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(LobbyItem item);
+
+        void onListFragmentJoin(LobbyItem item);
     }
 }

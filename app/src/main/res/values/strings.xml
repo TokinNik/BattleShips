@@ -11,4 +11,8 @@
     <string name="pre_game">Расстановка кораблей</string>
     <string name="game">Игра</string>
     <string name="test">тест</string>
+    <string name="join">Присоединиться</string>
+    <string name="add_new_lobby">Создать лобби</string>
+    <string name="all_lobby">Все лобби</string>
+    <string name="shop">Магазин</string>
 </resources>

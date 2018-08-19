@@ -18,7 +18,7 @@
             android:text="@string/game"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
-        <com.tokovoynr.battleships.TestView
+        <com.tokovoynr.battleships.UI.TestView
             android:id="@+id/testView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -35,7 +35,7 @@
                 android:layout_weight="1"
                 android:text="Button" />
 
-            <com.tokovoynr.battleships.TestView
+            <com.tokovoynr.battleships.UI.TestView
                 android:id="@+id/testView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

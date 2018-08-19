@@ -1,44 +1,37 @@
-package com.tokovoynr.battleships;
+package com.tokovoynr.battleships.UI;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 
-public class TestView extends View
+import com.tokovoynr.battleships.R;
+
+public class TestUnit extends View
 {
-    public static final String TAG = "TestView";
-    private float posLeft;
-    private float posTop;
-    private float posTopMax;
-    private float posLeftMax;
-    private float posLeftStart;
-    private float posTopStart;
-    public TestView(Context context, AttributeSet attr)
+    final static String TAG = " TEST_UNIT";
+
+    public TestUnit(Context context)
     {
-        super(context, attr);
-        posLeftStart = 100;
-        posTopStart = 100;
-        posLeft = posLeftStart;
-        posTop = posTopStart;
+        super(context);
     }
 
-    @Override
-    protected void onAttachedToWindow()
+    public TestUnit(Context context, @Nullable AttributeSet attrs)
     {
-        super.onAttachedToWindow();
+        super(context, attrs);
+    }
 
+    public TestUnit(Context context, @Nullable AttributeSet attrs, int defStyleAttr)
+    {
+        super(context, attrs, defStyleAttr);
     }
 
     @Override
@@ -79,21 +72,28 @@ public class TestView extends View
     }
 
     @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+    }
+
+    @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom)
     {
+        Log.d(TAG, "onLayout: " + changed + " " + left + " " + top + " " + right + " " + bottom);
         super.onLayout(changed, left, top, right, bottom);
-
     }
 
     @SuppressLint("DrawAllocation")
     @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+    protected void onDraw(Canvas canvas)
+    {
         Bitmap tempBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.red_box);
         Paint paint = new Paint();
-        paint.setColor(Color.GRAY);
+        paint.setColor(Color.GREEN);
 
         canvas.drawColor(paint.getColor());
-        canvas.drawBitmap(tempBitmap, posLeft, posTop, null);
+        canvas.drawBitmap(tempBitmap, 0, 0, null);
+
+        super.onDraw(canvas);
     }
 }
