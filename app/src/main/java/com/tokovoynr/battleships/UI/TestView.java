@@ -72,9 +72,9 @@ public class TestView extends View
         int width;
         int height;
 
-        Log.d(TAG, "widthMeasureSpec " +  widthMeasureSpec + " | widthMeasureSpec " + widthMeasureSpec +
+        /*Log.d(TAG, "widthMeasureSpec " +  widthMeasureSpec + " | widthMeasureSpec " + widthMeasureSpec +
                 " | widthSize " + widthSize + " | heightMode " + heightMode + " | heightSize  " + heightSize
-                + " | orientation " + getResources().getConfiguration().orientation);
+                + " | orientation " + getResources().getConfiguration().orientation);*/
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
         {
 
