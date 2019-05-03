@@ -13,8 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TableLayout;
 
 import com.tokovoynr.battleships.R;
+import com.tokovoynr.battleships.UI.Lobby.Cell;
 
 
 public class PreGameFragment extends Fragment implements View.OnTouchListener
@@ -27,7 +29,7 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener
     private int offsetY = 0;
     private boolean touchFlag = false;
     private boolean targetFlag = false;
-    private int borderX, borderY;
+    private int borderX1, borderY1, borderX2, borderY2;
     private boolean firstFlag = true;
 
     public PreGameFragment()
@@ -62,53 +64,82 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener
         final int displayWidth = displaymetrics.widthPixels;
         final int displayHeight = displaymetrics.heightPixels;
 
+        view.findViewById(R.id.main_field).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event)
+            {
+                switch (event.getActionMasked())
+                {
+                    case MotionEvent.ACTION_DOWN:
+                        Log.d(TAG, "DOWN TABLE " + v.getId());
+                        return true;
+                    case MotionEvent.ACTION_MOVE:
+                        Log.d(TAG, "MOVE TABLE");
+                        return true;
+                    case MotionEvent.ACTION_UP:
+                        Log.d(TAG, "UP TABLE");
+                        return false;
+                }
+                return false;
+            }
+        });
+
         final RelativeLayout root = view.findViewById(R.id.relative_main);
         root.setOnTouchListener(new View.OnTouchListener()
         {
             public boolean onTouch(View v, MotionEvent event)
             {
+                if (event.getActionMasked() == MotionEvent.ACTION_DOWN)
+                    Log.d(TAG, "DOWN ROOT " + v.getId());
                 if (touchFlag)
                 {
                     switch (event.getActionMasked())
                     {
                         case MotionEvent.ACTION_DOWN:
-                            Log.d(TAG, "DOWN 1");
-                            break;
+                            Log.d(TAG, "DOWN ROOT");
+                            return true;
                         case MotionEvent.ACTION_MOVE:
-                            int x = (int) event.getX() - offsetX/2;
-                            int y = (int) event.getY() - offsetY;
-                            Log.d(TAG, "MOVE 1 " + x + "  " + y);
+                            int x = (int) event.getX();
+                            int y = (int) event.getY();
+                            Log.d(TAG, "MOVE ROOT " + x + "  " + y);
+                            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(new ViewGroup.MarginLayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
 
                             if (firstFlag)
                             {
                                 firstFlag = false;
-                                ImageView mainField = view.findViewById(R.id.main_field);
-                                borderX = mainField.getWidth();
-                                borderY = mainField.getHeight();
-                                Log.d(TAG, "! " + borderX + "  " + borderY);
+                                TableLayout mainField = view.findViewById(R.id.main_field);
+                                int[] cord = new int[2];
+                                mainField.getLocationOnScreen(cord);
+                                borderX1 = cord[0];
+                                borderY1 = cord[1];
+                                borderX2 = mainField.getWidth() + cord[0];
+                                borderY2 = mainField.getHeight() + cord[1];
                             }
 
-                            if (x < borderX && x > 0 && y < borderY && y > 0)
+                            if (x < borderX2 && x > borderX1 && y < borderY2 && y > borderY1)
                             {
                                 targetFlag = true;
                                 selected_item.setAlpha(1f);
+                                if (checkCellsBorder(event.getX(), event.getY(), lp))
+                                {
+                                    return false;
+                                }
                             }
                             else if (targetFlag)
                             {
                                 targetFlag = false;
                                 selected_item.setAlpha(0.5f);
                             }
-                            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(new ViewGroup.MarginLayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
-                            lp.setMargins(x, y, 0, 0);
+
+                            lp.setMargins(x - offsetX/2, y - offsetY, 0, 0);
                             selected_item.setLayoutParams(lp);
-                            break;
+                            return false;
                         case MotionEvent.ACTION_UP:
-                            Log.d(TAG, "UP 1");
+                            Log.d(TAG, "UP ROOT");
                             touchFlag = false;
                             if (targetFlag)
                             {
                                 selected_item.setAlpha(1f);
-                                //selected_item.setImageDrawable(getResources().getDrawable(R.drawable.green_box));
                                 targetFlag = false;
                             }
                             else
@@ -120,8 +151,9 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener
                         default:
                             break;
                     }
+                    return !targetFlag;
                 }
-                return true;
+                return false;
             }
         });
 
@@ -178,7 +210,7 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener
         switch (event.getActionMasked())
         {
             case MotionEvent.ACTION_DOWN:
-                Log.d(TAG, "DOWN 2");
+                Log.d(TAG, "DOWN DnDView");
                 touchFlag = true;
                 offsetX = (int) event.getX();
                 offsetY = (int) event.getY();
@@ -222,10 +254,10 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener
                 selected_item = shadow;
                 break;
             case MotionEvent.ACTION_MOVE:
-                Log.d(TAG, "MOVE 2");
+                Log.d(TAG, "MOVE DnDView");
                 break;
             case MotionEvent.ACTION_UP:
-                Log.d(TAG, "UP 2");
+                Log.d(TAG, "UP DnDView");
                 break;
             default:
                 break;
@@ -233,4 +265,85 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener
         return false;
     }
 
+
+    private boolean checkCellsBorder(float eX, float eY, RelativeLayout.LayoutParams lp)
+    {
+        int left = 1, right = 12, mid = (left + right)/2;
+        int i = ((mid - 1) * 12) + 1;
+        while(true)//fixme vremenno
+        {
+            int[] cord = new int[2];
+            Cell cell = view.findViewWithTag(String.valueOf(i));
+            cell.getLocationOnScreen(cord);
+            int size = cell.getWidth();
+
+            if(cord[1] <= eY)
+            {
+                if(cord[1] + size >= eY)
+                {
+                    int iY = i;
+                    left = 1;
+                    right = 12;
+                    mid = (left + right)/2;
+                    i = iY + mid - 1;
+                    while (true)
+                    {
+                        cell = view.findViewWithTag(String.valueOf(i));
+                        cell.getLocationOnScreen(cord);
+                        size = cell.getWidth();
+
+                        if(cord[0] <= eX)
+                        {
+                            if(cord[0] + size >= eX)
+                            {
+                                lp.setMargins(cord[0], cord[1], 0, 0);
+                                selected_item.setLayoutParams(lp);
+                                return true;
+                            }
+                            else
+                            {
+                                left = mid;
+                                mid = (right + mid)/2;
+
+                                if (mid == 12) return false;//fixme costil'?
+                                if (mid == 11) mid = 12;
+
+                                i = iY + mid - 1;
+                            }
+                        }
+                        else
+                        {
+                            right = mid;
+                            mid = (left + mid)/2;
+
+                            if (left == 12 && right == 12) return false;//fixme costil'?
+
+                            i = iY + mid - 1;
+                        }
+                    }
+                }
+                else
+                {
+                    left = mid;
+                    mid = (right + mid)/2;
+
+
+                    if (mid == 12) return false;//fixme costil'?
+                    if (mid == 11) mid = 12;
+
+                    i = ((mid - 1) * 12) + 1;
+                }
+
+            }
+            else
+            {
+                right = mid;
+                mid = (left + mid)/2;
+
+                if (left == 1 && right == 1) return false;//fixme costil'?
+
+                i = ((mid - 1) * 12) + 1;
+            }
+        }
+    }
 }
