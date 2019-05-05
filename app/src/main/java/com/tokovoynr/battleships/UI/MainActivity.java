@@ -6,15 +6,20 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.RelativeLayout;
+import android.widget.TableLayout;
 
 import com.tokovoynr.battleships.R;
 import com.tokovoynr.battleships.UI.Lobby.ListFragment;
 import com.tokovoynr.battleships.UI.Lobby.LobbyContent;
 import com.tokovoynr.battleships.UI.Lobby.LobbyFragment;
+import com.tokovoynr.battleships.UI.PreGame.PreGameFragment;
 
 public class MainActivity extends AppCompatActivity implements SettingsFragment.OnSettingsFragmentInteractionListener,
         ListFragment.OnListFragmentInteractionListener,
@@ -24,9 +29,13 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
         ShopFragment.OnShopFragmentInteractionListener
 {
     public static final String TAG = "MAIN_ACTIVITY";
+    public static final float MIN_SCALE = 0.7f;
+    public static final float MAX_SCALE = 2f;
     private static String currentFragment;
     private FragmentManager fragmentManager;
     private LinearLayout mainLayout;
+    private ScaleGestureDetector detector;
+    private float scale = 1f;
 
 
     @Override
@@ -38,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
         fragmentManager = getSupportFragmentManager();
         mainLayout = findViewById(R.id.mainLayout);
         currentFragment = TAG;
+        detector = new ScaleGestureDetector(this, new ScaleListener());
     }
 
     @Override
@@ -214,5 +224,44 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
 
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event)
+    {
+        if (currentFragment.equals(PreGameFragment.TAG))
+        {
+            detector.onTouchEvent(event);
+        }
+        return super.onTouchEvent(event);
+    }
 
+    private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener
+    {
+
+        @Override
+        public boolean onScaleBegin(ScaleGestureDetector detector) {
+            return true;
+        }
+
+        @Override
+        public boolean onScale(ScaleGestureDetector detector) {
+            scale *= detector.getScaleFactor();
+
+            if (scale > MAX_SCALE)
+                scale = MAX_SCALE;
+
+            if (scale < MIN_SCALE)
+                scale = MIN_SCALE;
+
+            TableLayout mainField = findViewById(R.id.main_field);
+            mainField.setScaleX(scale);
+            mainField.setScaleY(scale);
+            return true;
+        }
+
+        @Override
+        public void onScaleEnd(ScaleGestureDetector detector)
+        {
+            super.onScaleEnd(detector);
+        }
+    }
 }
