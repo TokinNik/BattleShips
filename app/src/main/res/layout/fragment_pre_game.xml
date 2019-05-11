@@ -20,7 +20,7 @@
             android:text="@string/pre_game"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/main_field_frame"
@@ -38,7 +38,8 @@
                 android:id="@+id/main_field"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center">
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true">
 
                 <TableRow
                     android:layout_width="match_parent"
@@ -1122,7 +1123,7 @@
                 </TableRow>
 
             </TableLayout>
-        </FrameLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/ship_buttons_layout"

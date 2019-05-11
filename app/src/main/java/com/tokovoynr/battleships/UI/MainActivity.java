@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
     private FragmentManager fragmentManager;
     private LinearLayout mainLayout;
     private ScaleGestureDetector detector;
-    private float scale = 1f;
 
 
     @Override
@@ -236,15 +235,21 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
 
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener
     {
+        float scale = 1f;
+        float prewX, prewY, curX, curY;
 
         @Override
         public boolean onScaleBegin(ScaleGestureDetector detector) {
+            prewX = detector.getFocusX();
+            prewY = detector.getFocusY();
             return true;
         }
 
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
             scale *= detector.getScaleFactor();
+            curX = detector.getFocusX();
+            curY = detector.getFocusY();
 
             if (scale > MAX_SCALE)
                 scale = MAX_SCALE;
@@ -255,6 +260,12 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
             TableLayout mainField = findViewById(R.id.main_field);
             mainField.setScaleX(scale);
             mainField.setScaleY(scale);
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(new ViewGroup.MarginLayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+            ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) mainField.getLayoutParams();
+            lp.setMargins((int) (mlp.leftMargin + (curX - prewX)), (int) (mlp.topMargin + (curY - prewY)), 0, 0);
+            mainField.setLayoutParams(lp);
+            prewX = curX;
+            prewY = curY;
             return true;
         }
 

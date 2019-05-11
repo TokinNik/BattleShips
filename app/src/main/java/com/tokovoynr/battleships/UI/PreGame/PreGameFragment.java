@@ -149,7 +149,7 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener
         int borderX2 = (int)(mainField.getWidth() * scale) + cord[0];
         int borderY2 = (int)(mainField.getHeight() * scale) + cord[1];
 
-        FrameLayout mainFieldFrame = view.findViewById(R.id.main_field_frame);
+        RelativeLayout mainFieldFrame = view.findViewById(R.id.main_field_frame);
         int[] cordFrame = new int[2];
         mainFieldFrame.getLocationOnScreen(cordFrame);
         int borderX1F = cordFrame[0];
