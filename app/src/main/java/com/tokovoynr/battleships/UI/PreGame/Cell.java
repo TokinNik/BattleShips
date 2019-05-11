@@ -25,6 +25,7 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
     public Cell(Context context)
     {
         super(context);
+
         setOnTouchListener(this);
     }
 
@@ -54,6 +55,7 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
                 int[] cord = new int[2];
                 getLocationOnScreen(cord);
                 Log.d(TAG, "DOWN CELL X = " + cord[0] + " Y = " + cord[1]);
+
                 break;
             case MotionEvent.ACTION_MOVE:
                 //Log.d(TAG, "MOVE CELL " + getId());
@@ -91,5 +93,54 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
                 break;
 
         }
+    }
+
+    public CharSequence getCordString(int id)
+    {
+        String coordinate = "";
+        int x = id%12;
+        switch (x)
+        {
+            case 1:
+                coordinate = getResources().getString(R.string.a);
+                break;
+            case 2:
+                coordinate = getResources().getString(R.string.b);
+                break;
+            case 3:
+                coordinate = getResources().getString(R.string.v);
+                break;
+            case 4:
+                coordinate = getResources().getString(R.string.g);
+                break;
+            case 5:
+                coordinate = getResources().getString(R.string.d);
+                break;
+            case 6:
+                coordinate = getResources().getString(R.string.e);
+                break;
+            case 7:
+                coordinate = getResources().getString(R.string.j);
+                break;
+            case 8:
+                coordinate = getResources().getString(R.string.z);
+                break;
+            case 9:
+                coordinate = getResources().getString(R.string.i);
+                break;
+            case 10:
+                coordinate = getResources().getString(R.string.k);
+                break;
+            case 11:
+                coordinate = getResources().getString(R.string.l);
+                break;
+            case 0:
+                coordinate = getResources().getString(R.string.m);
+                break;
+        }
+
+        coordinate += String.valueOf(x == 0 ? (id / 12) : ((id / 12) + 1));
+
+        return coordinate;
     }
 }

@@ -12,10 +12,10 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
+import android.widget.TextView;
 
 import com.tokovoynr.battleships.R;
 
@@ -31,7 +31,7 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener
     private boolean touchFlag = false;
     private boolean targetFlag = false;
     private int borderX1, borderY1, borderX2, borderY2;
-    private int selectedShip;
+    private int selectedCell;
     private float scale;
     private int displayWidth;
     private int displayHeight;
@@ -69,9 +69,13 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener
         displayWidth = displaymetrics.widthPixels;
         displayHeight = displaymetrics.heightPixels;
 
+        if (displayWidth < 780)//fixme nado normalno adaptirovat' razmeri
+        {
+            TableLayout mainField = view.findViewById(R.id.main_field);
+            mainField.setScaleX(0.9f);
+            mainField.setScaleY(0.9f);
+        }
 
-
-        final TableLayout mainField = view.findViewById(R.id.main_field);
 
         final RelativeLayout root = view.findViewById(R.id.relative_main);
         root.setOnTouchListener(new View.OnTouchListener()
@@ -115,7 +119,8 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener
                             if (targetFlag)
                             {
                                 targetFlag = false;
-                                ((Cell)view.findViewWithTag(String.valueOf(selectedShip))).setType(selected_item.getType());
+                                ((Cell)view.findViewWithTag(String.valueOf(selectedCell))).setType(selected_item.getType());
+                                ((TextView)view.findViewById(R.id.textView_selected_cell)).setText(((Cell)view.findViewWithTag(String.valueOf(selectedCell))).getCordString(selectedCell));
                             }
                             root.removeView(selected_item);
                             selected_item = null;
@@ -323,7 +328,7 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener
                                 lp.setMargins(cord[0], cord[1], 0, 0);
                                 Log.d(TAG, "---- " + cord[0] + " " + cord[1]);
                                 selected_item.setLayoutParams(lp);
-                                selectedShip = i;
+                                selectedCell = i;
                                 return true;
                             }
                             else

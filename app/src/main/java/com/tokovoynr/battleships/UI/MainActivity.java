@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
         ShopFragment.OnShopFragmentInteractionListener
 {
     public static final String TAG = "MAIN_ACTIVITY";
-    public static final float MIN_SCALE = 0.7f;
+    public static final float MIN_SCALE = 0.9f;
     public static final float MAX_SCALE = 2f;
     private static String currentFragment;
     private FragmentManager fragmentManager;
@@ -235,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
 
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener
     {
-        float scale = 1f;
+        float scale = 0.9f;
         float prewX, prewY, curX, curY;
 
         @Override

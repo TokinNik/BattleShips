@@ -15,4 +15,18 @@
     <string name="add_new_lobby">Создать лобби</string>
     <string name="all_lobby">Все лобби</string>
     <string name="shop">Магазин</string>
+    <string name="a">A</string>
+    <string name="b">Б</string>
+    <string name="v">B</string>
+    <string name="g">Г</string>
+    <string name="d">Д</string>
+    <string name="e">Е</string>
+    <string name="j">Ж</string>
+    <string name="z">З</string>
+    <string name="i">И</string>
+    <string name="k">К</string>
+    <string name="l">Л</string>
+    <string name="m">М</string>
+    <string name="ready">Готов</string>
+    <string name="exit">Выход</string>
 </resources>
