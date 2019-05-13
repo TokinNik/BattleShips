@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -18,9 +19,10 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.tokovoynr.battleships.R;
+import com.tokovoynr.battleships.UI.MainActivity;
 
 
-public class PreGameFragment extends Fragment implements View.OnTouchListener
+public class PreGameFragment extends Fragment implements View.OnTouchListener, Cell.OnCellListener
 {
     public static final String TAG = "PRE_GAME_FRAGMENT";
     private View view;
@@ -30,8 +32,10 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener
     private int offsetY = 0;
     private boolean touchFlag = false;
     private boolean targetFlag = false;
+    private boolean relocateFlag = false;
     private int borderX1, borderY1, borderX2, borderY2;
     private int selectedCell;
+    private int relocatedCell;
     private float scale;
     private int displayWidth;
     private int displayHeight;
@@ -69,13 +73,13 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener
         displayWidth = displaymetrics.widthPixels;
         displayHeight = displaymetrics.heightPixels;
 
+
         if (displayWidth < 780)//fixme nado normalno adaptirovat' razmeri
         {
             TableLayout mainField = view.findViewById(R.id.main_field);
             mainField.setScaleX(0.9f);
             mainField.setScaleY(0.9f);
         }
-
 
         final RelativeLayout root = view.findViewById(R.id.relative_main);
         root.setOnTouchListener(new View.OnTouchListener()
@@ -92,7 +96,7 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener
                         case MotionEvent.ACTION_MOVE:
                             int x = (int) event.getX();
                             int y = (int) event.getY();
-                            Log.d(TAG, "MOVE ROOT " + x + "  " + y);
+                            //Log.d(TAG, "MOVE ROOT " + x + "  " + y);
                             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(new ViewGroup.MarginLayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
 
                             if (x < borderX2 && x > borderX1 && y < borderY2 && y > borderY1)
@@ -119,9 +123,23 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener
                             if (targetFlag)
                             {
                                 targetFlag = false;
-                                ((Cell)view.findViewWithTag(String.valueOf(selectedCell))).setType(selected_item.getType());
+                                ((Cell)view.findViewWithTag(String.valueOf(selectedCell))).setType(selected_item.getType());//TODO setShipsCell
                                 ((TextView)view.findViewById(R.id.textView_selected_cell)).setText(((Cell)view.findViewWithTag(String.valueOf(selectedCell))).getCordString(selectedCell));
+
+                                if(MainActivity.getGameLogic().setShip(selectedCell, selected_item.getType().ordinal()))
+                                {
+                                    Log.d(TAG, "setShip true");
+                                }
+                                else
+                                    Log.d(TAG, "setShip false");
+
                             }
+                            else if(relocateFlag)
+                            {
+                                relocateFlag = false;
+                                ((Cell)view.findViewWithTag(String.valueOf(relocatedCell))).setType(selected_item.getType());//TODO setShipsCell
+                            }
+
                             root.removeView(selected_item);
                             selected_item = null;
                             break;
@@ -167,7 +185,7 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener
         this.borderX2 = (borderX2 > borderX2F) ? borderX2F : borderX2;
         this.borderY2 = (borderY2 > borderY2F) ? borderY2F : borderY2;
 
-        Log.d(TAG, "!!!!!!!! " + this.borderX1 + " " + this.borderY1 + " " + this.borderX2 + " " + this.borderY2 + " " + mainField.getWidth() + " " + mainFieldFrame.getHeight() + " " + mainField.getScaleX());
+        //Log.d(TAG, "!!!!!!!! " + this.borderX1 + " " + this.borderY1 + " " + this.borderX2 + " " + this.borderY2 + " " + mainField.getWidth() + " " + mainFieldFrame.getHeight() + " " + mainField.getScaleX());
     }
 
     public void onButtonPressed(Uri uri)
@@ -192,7 +210,16 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener
                     + " must implement OnPreGameFragmentInteractionListener");
         }
 
+    }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        for (int i = 1; i < 144; i++)//fixme medlenno i ne_efeektivno!?
+        {
+            ((Cell)view.findViewWithTag(String.valueOf(i))).setListener(this);
+        }
     }
 
     @Override
@@ -206,6 +233,12 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener
     {
         void onFragmentInteraction(Uri uri);
 
+    }
+
+    @Override
+    public void onCellTouch(View v, MotionEvent event)
+    {
+        onTouch(v, event);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -230,23 +263,41 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener
                         break;
                     case R.id.dnd_ship_2:
                         shadow.setImageDrawable(getResources().getDrawable(R.drawable.yellow_box));
-                        shadow.setType(Cell.CellType.MINE);
+                        shadow.setType(Cell.CellType.SHIP_1);
                         break;
                     case R.id.dnd_ship_3:
                         shadow.setImageDrawable(getResources().getDrawable(R.drawable.green_box));
-                        shadow.setType(Cell.CellType.SHIP);
+                        shadow.setType(Cell.CellType.SHIP_2);
                         break;
                     case R.id.dnd_ship_4:
                         shadow.setImageDrawable(getResources().getDrawable(R.drawable.blue_box));
-                        shadow.setType(Cell.CellType.MINE);
+                        shadow.setType(Cell.CellType.SHIP_3);
                         break;
                     case R.id.dnd_ship_5:
                         shadow.setImageDrawable(getResources().getDrawable(R.drawable.white_box));
-                        shadow.setType(Cell.CellType.EMPTY);
+                        shadow.setType(Cell.CellType.SHIP_4);
                         break;
                     default:
-                        shadow.setImageDrawable(getResources().getDrawable(R.drawable.red_box));
-                        shadow.setType(Cell.CellType.MINE);
+                        if (v.getTag() != null)
+                        {
+                            if (((Cell)v).getType() != Cell.CellType.EMPTY)
+                            {
+                                shadow.setImageDrawable(((Cell) v).getDrawable());
+                                shadow.setType(((Cell) v).getType());
+                                relocateFlag = true;
+                                relocatedCell = Integer.parseInt((String) v.getTag());
+                                ((Cell) v).setType(Cell.CellType.EMPTY);//TODO removeShipsCell
+                            }
+                            else
+                            {
+                                touchFlag = false;
+                            }
+                        }
+                        else
+                        {
+                            shadow.setImageDrawable(getResources().getDrawable(R.drawable.red_box));
+                            shadow.setType(Cell.CellType.MINE);
+                        }
                         break;
 
                 }
@@ -259,15 +310,22 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener
                 shadow.setBackgroundColor(Color.BLACK);
                 shadow.setLayoutParams(v.getLayoutParams());
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(new ViewGroup.MarginLayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
-                ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) view.findViewById(R.id.ship_buttons_layout).getLayoutParams();
-
                 layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                layoutParams.setMargins(v.getLeft() + v.getWidth()/2, 0, 0, marginLayoutParams.bottomMargin);
-                shadow.setLayoutParams(layoutParams);
+                if (!relocateFlag)
+                {
+                    ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) view.findViewById(R.id.ship_buttons_layout).getLayoutParams();
+                    layoutParams.setMargins(v.getLeft() + v.getWidth() / 2, 0, 0, marginLayoutParams.bottomMargin);
+                }
+                else
+                {
+                    int[] cord = new int[2];
+                    v.getLocationOnScreen(cord);
+                    layoutParams.setMargins(cord[0], cord[1], 0, 0);
+                }
 
+                shadow.setLayoutParams(layoutParams);
                 RelativeLayout l = view.findViewById(R.id.relative_main);
                 l.addView(shadow);
-
                 selected_item = shadow;
                 break;
             case MotionEvent.ACTION_MOVE:
@@ -297,7 +355,7 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener
             if (first)
             {
                 float scale = view.findViewById(R.id.main_field).getScaleX();
-                Log.d(TAG, " ||||| " + scale);
+                //Log.d(TAG, " ||||| " + scale);
                 if (scale > 1.0)
                     size = (int)(cell.getWidth() * scale);
                 else
@@ -326,7 +384,7 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener
                             if(cord[0] + size >= eX)
                             {
                                 lp.setMargins(cord[0], cord[1], 0, 0);
-                                Log.d(TAG, "---- " + cord[0] + " " + cord[1]);
+                                //Log.d(TAG, "---- " + cord[0] + " " + cord[1]);
                                 selected_item.setLayoutParams(lp);
                                 selectedCell = i;
                                 return true;

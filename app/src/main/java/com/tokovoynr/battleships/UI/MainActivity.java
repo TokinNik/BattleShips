@@ -20,6 +20,7 @@ import com.tokovoynr.battleships.UI.Lobby.ListFragment;
 import com.tokovoynr.battleships.UI.Lobby.LobbyContent;
 import com.tokovoynr.battleships.UI.Lobby.LobbyFragment;
 import com.tokovoynr.battleships.UI.PreGame.PreGameFragment;
+import com.tokovoynr.battleships.game.GameLogic;
 
 public class MainActivity extends AppCompatActivity implements SettingsFragment.OnSettingsFragmentInteractionListener,
         ListFragment.OnListFragmentInteractionListener,
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
     public static final float MIN_SCALE = 0.9f;
     public static final float MAX_SCALE = 2f;
     private static String currentFragment;
+    private static GameLogic gameLogic;
     private FragmentManager fragmentManager;
     private LinearLayout mainLayout;
     private ScaleGestureDetector detector;
@@ -47,6 +49,10 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
         mainLayout = findViewById(R.id.mainLayout);
         currentFragment = TAG;
         detector = new ScaleGestureDetector(this, new ScaleListener());
+
+
+        gameLogic = new GameLogic();
+
     }
 
     @Override
@@ -274,5 +280,9 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
         {
             super.onScaleEnd(detector);
         }
+    }
+
+    public static GameLogic getGameLogic() {
+        return gameLogic;
     }
 }

@@ -12,20 +12,25 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.tokovoynr.battleships.R;
+import com.tokovoynr.battleships.UI.MainActivity;
 
 public class Cell extends android.support.v7.widget.AppCompatImageView implements View.OnTouchListener
 {
     public enum CellType
     {
         EMPTY,
-        SHIP,
+        SHIP_1,
+        SHIP_2,
+        SHIP_3,
+        SHIP_4,
         MINE
     }
     public static final String TAG = "CELL_VIEW";
+    private OnCellListener listener;
+    private CellType type = CellType.EMPTY;
     public Cell(Context context)
     {
         super(context);
-
         setOnTouchListener(this);
     }
 
@@ -54,24 +59,30 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
             case MotionEvent.ACTION_DOWN:
                 int[] cord = new int[2];
                 getLocationOnScreen(cord);
-                Log.d(TAG, "DOWN CELL X = " + cord[0] + " Y = " + cord[1]);
-
+                Log.d(TAG, "DOWN CELL " + getTag() + " " + type);
+                listener.onCellTouch(v, event);
                 break;
             case MotionEvent.ACTION_MOVE:
                 //Log.d(TAG, "MOVE CELL " + getId());
                 return false;
             case MotionEvent.ACTION_UP:
-                Log.d(TAG, "UP CELL");
+                Log.d(TAG, "UP CELL " + getTag());
 
                 break;
             default:
                 break;
         }
-        return true;
+        return false;
+    }
+
+    public interface OnCellListener
+    {
+        void onCellTouch(View v, MotionEvent event);
     }
 
     public void setType(CellType type)
     {
+        this.type = type;
         switch (type)
         {
             case EMPTY:
@@ -79,9 +90,21 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
                 setImageDrawable(img);
                 Log.d(TAG, "EMPTY");
                 break;
-            case SHIP:
+            case SHIP_1:
                 setImageDrawable(getResources().getDrawable(R.drawable.green_box));
-                Log.d(TAG, "SHIP");
+                Log.d(TAG, "SHIP_1");
+                break;
+            case SHIP_2:
+                setImageDrawable(getResources().getDrawable(R.drawable.green_box));
+                Log.d(TAG, "SHIP_1");
+                break;
+            case SHIP_3:
+                setImageDrawable(getResources().getDrawable(R.drawable.green_box));
+                Log.d(TAG, "SHIP_1");
+                break;
+            case SHIP_4:
+                setImageDrawable(getResources().getDrawable(R.drawable.green_box));
+                Log.d(TAG, "SHIP_1");
                 break;
             case MINE:
                 setImageDrawable(getResources().getDrawable(R.drawable.red_box));
@@ -93,6 +116,10 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
                 break;
 
         }
+    }
+
+    public CellType getType() {
+        return type;
     }
 
     public CharSequence getCordString(int id)
@@ -142,5 +169,21 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
         coordinate += String.valueOf(x == 0 ? (id / 12) : ((id / 12) + 1));
 
         return coordinate;
+    }
+
+    public int[] getCordInt(int id)
+    {
+        int[] coordinate = new int[2];
+        coordinate[0] = id%12;
+        if(coordinate[0] == 0)
+            coordinate[0] = 12;
+
+        coordinate[1] = coordinate[0] == 12 ? (id / 12) : ((id / 12) + 1);
+
+        return coordinate;
+    }
+
+    public void setListener(OnCellListener listener) {
+        this.listener = listener;
     }
 }
