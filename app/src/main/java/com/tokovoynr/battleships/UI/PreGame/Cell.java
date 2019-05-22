@@ -12,7 +12,6 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.tokovoynr.battleships.R;
-import com.tokovoynr.battleships.UI.MainActivity;
 
 public class Cell extends android.support.v7.widget.AppCompatImageView implements View.OnTouchListener
 {
@@ -23,21 +22,32 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
         SHIP_2,
         SHIP_3,
         SHIP_4,
-        MINE
+        MINE,
+        ERR
     }
     public static final String TAG = "CELL_VIEW";
     private OnCellListener listener;
     private CellType type = CellType.EMPTY;
+    private int xGrid = 1;
+    private int yGrid = 1;
+
+
     public Cell(Context context)
     {
         super(context);
         setOnTouchListener(this);
+        int[] cord = getCordInt(Integer.parseInt(getTag().toString()));
+        xGrid = cord[1];
+        yGrid = cord[0];
     }
 
     public Cell(Context context, @Nullable AttributeSet attrs)
     {
         super(context, attrs);
         setOnTouchListener(this);
+        int[] cord = getCordInt(Integer.parseInt(getTag().toString()));
+        xGrid = cord[1];
+        yGrid = cord[0];
     }
 
     @Override
@@ -57,10 +67,13 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
         switch (event.getActionMasked())
         {
             case MotionEvent.ACTION_DOWN:
-                int[] cord = new int[2];
-                getLocationOnScreen(cord);
                 Log.d(TAG, "DOWN CELL " + getTag() + " " + type);
-                listener.onCellTouch(v, event);
+                if (type != CellType.ERR)
+                {
+                    int[] cord = new int[2];
+                    getLocationOnScreen(cord);
+                    listener.onCellTouch(v, event);
+                }
                 break;
             case MotionEvent.ACTION_MOVE:
                 //Log.d(TAG, "MOVE CELL " + getId());
@@ -82,7 +95,6 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
 
     public void setType(CellType type)
     {
-        this.type = type;
         switch (type)
         {
             case EMPTY:
@@ -91,31 +103,36 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
                 Log.d(TAG, "EMPTY");
                 break;
             case SHIP_1:
-                setImageDrawable(getResources().getDrawable(R.drawable.green_box));
+                setImageDrawable(getResources().getDrawable(R.drawable.ship_1_up));
                 Log.d(TAG, "SHIP_1");
                 break;
             case SHIP_2:
-                setImageDrawable(getResources().getDrawable(R.drawable.green_box));
-                Log.d(TAG, "SHIP_1");
+                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_head_up));
+                Log.d(TAG, "SHIP_2");
                 break;
             case SHIP_3:
-                setImageDrawable(getResources().getDrawable(R.drawable.green_box));
-                Log.d(TAG, "SHIP_1");
+                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_mid_up));
+                Log.d(TAG, "SHIP_3");
                 break;
             case SHIP_4:
-                setImageDrawable(getResources().getDrawable(R.drawable.green_box));
-                Log.d(TAG, "SHIP_1");
+                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_stern_up));
+                Log.d(TAG, "SHIP_4");
                 break;
             case MINE:
-                setImageDrawable(getResources().getDrawable(R.drawable.red_box));
+                setImageDrawable(getResources().getDrawable(R.drawable.mine_active));
                 Log.d(TAG, "MINE");
+                break;
+            case ERR:
+                if (this.type != CellType.EMPTY)
+                    setImageDrawable(getResources().getDrawable(R.drawable.red_box));
+                Log.d(TAG, "ERR");
                 break;
             default:
                 setImageDrawable(getResources().getDrawable(R.drawable.red_box));
                 Log.d(TAG, "DEF");
                 break;
-
         }
+        this.type = type;
     }
 
     public CellType getType() {
@@ -171,7 +188,7 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
         return coordinate;
     }
 
-    public int[] getCordInt(int id)
+    public static int[] getCordInt(int id)
     {
         int[] coordinate = new int[2];
         coordinate[0] = id%12;
@@ -181,6 +198,22 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
         coordinate[1] = coordinate[0] == 12 ? (id / 12) : ((id / 12) + 1);
 
         return coordinate;
+    }
+
+    public int getxGrid() {
+        return xGrid;
+    }
+
+    public void setxGrid(int xGrid) {
+        this.xGrid = xGrid;
+    }
+
+    public int getyGrid() {
+        return yGrid;
+    }
+
+    public void setyGrid(int yGrid) {
+        this.yGrid = yGrid;
     }
 
     public void setListener(OnCellListener listener) {

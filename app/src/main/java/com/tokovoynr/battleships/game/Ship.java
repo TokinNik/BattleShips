@@ -1,55 +1,110 @@
 package com.tokovoynr.battleships.game;
 
+import android.util.Log;
+
 import com.tokovoynr.battleships.UI.PreGame.Cell;
 
 public class Ship
 {
+
+
     public enum ShipDirection
     {
         UP,
         DOWN,
         RIGHT,
-        LEFT
+        LEFT;
     }
-
     public static final String TAG = "SHIP";
-    private int deskCount;
+
+    private int deckCount;
     private int anchorCell;
     private ShipDirection direction;
-    private Cell[] cells;
+    private int[][] cells;
     private boolean onDesk = false;
-
-    public Ship(int deskCount, ShipDirection direction)
+    public Ship(int deckCount, ShipDirection direction)
     {
-        this.deskCount = deskCount;
+        this.deckCount = deckCount;
         this.direction = direction;
+        this.cells = new int[9+3*deckCount-1][2];
     }
 
-    public Ship(int deskCount, int anchorCell, ShipDirection direction)
+    public Ship(int deckCount, int anchorCell, ShipDirection direction)
     {
-        this.deskCount = deskCount;
+        this.deckCount = deckCount;
         this.anchorCell = anchorCell;
         this.direction = direction;
+        this.cells = new int[9+3*deckCount-1][2];
+        fillCellsAround();
     }
 
-    public Ship(int deskCount, int anchorCell, ShipDirection direction, Cell[] cells)
+
+    public boolean checkArea(int xGrid, int yGrid)
     {
-        this.deskCount = deskCount;
-        this.anchorCell = anchorCell;
-        this.direction = direction;
-        this.cells = cells;
+        if(!onDesk)
+            return true;
+
+        for (int[] cell: cells)
+        {
+            Log.d(TAG, "xG = " + xGrid + " yG = " + yGrid + " xC = " + cell[0] + " yC = " + cell[1]);
+            if (cell[1] == xGrid && cell[0] == yGrid)
+                return false;
+        }
+
+        return true;
+    }
+
+    private void fillCellsAround()
+    {
+        int[] cord = Cell.getCordInt(anchorCell);
+        int i = -1, j = -1;
+        switch (deckCount)
+        {
+            case 1:
+                break;
+            case 2:
+                j = -2;
+                break;
+            case 3:
+                i = -2;
+                j = -2;
+                break;
+            case 4:
+                i = -2;
+                j = -3;
+                break;
+
+        }
+        for (int[] cell: cells)
+        {
+            for (int ii = i; ii < 2; ii++)
+            {
+                for (int jj = j; jj < 2; jj++)
+                {
+                    if (ii == 0 && jj == 0)
+                        continue;
+                    else
+                    {
+                        cell[0] = cord[0] - ii;
+                        cell[1] = cord[1] - jj;
+                    }
+                }
+            }
+        }
     }
 
     public void setDirection(ShipDirection direction) {
         this.direction = direction;
     }
 
-    public void setCells(Cell[] cells) {
+    public void setCells(int[][] cells) {
         this.cells = cells;
     }
 
-    public void setAnchorCell(int anchorCell) {
+    public void setAnchorCell(int anchorCell)
+    {
         this.anchorCell = anchorCell;
+        fillCellsAround();
     }
 
     public void setOnDesk(boolean onDesk) {
@@ -60,8 +115,8 @@ public class Ship
         return onDesk;
     }
 
-    public int getDeskCount() {
-        return deskCount;
+    public int getDeckCount() {
+        return deckCount;
     }
 
     public int getAnchorCell() {
@@ -72,7 +127,7 @@ public class Ship
         return direction;
     }
 
-    public Cell[] getCells() {
+    public int[][] getCells() {
         return cells;
     }
 }

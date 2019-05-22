@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
 {
     public static final String TAG = "MAIN_ACTIVITY";
     public static final float MIN_SCALE = 0.9f;
-    public static final float MAX_SCALE = 2f;
+    public static final float MAX_SCALE = 3f;
     private static String currentFragment;
     private static GameLogic gameLogic;
     private FragmentManager fragmentManager;

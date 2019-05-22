@@ -1,7 +1,5 @@
 package com.tokovoynr.battleships.game;
 
-import com.tokovoynr.battleships.UI.PreGame.Cell;
-
 public class GameLogic
 {
     public static final String TAG = "GAME_LOGIC";
@@ -55,7 +53,7 @@ public class GameLogic
     {
         for (int i = 0; i < MAX_SHIP_COUNT; i++)
         {
-            if (!playerShips[i].isOnDesk())
+            if (!playerShips[i].isOnDesk() && playerShips[i].getDeckCount() == deckCount)
             {
                 playerShips[i].setAnchorCell(anchorCell);
                 playerShips[i].setOnDesk(true);
@@ -64,6 +62,19 @@ public class GameLogic
 
         }
         return false;
+    }
+
+    public boolean checkPosition(int xGrid, int yGrid)
+    {
+        for (int i = 0; i < MAX_SHIP_COUNT; i++)
+        {
+            if (!playerShips[i].checkArea(xGrid, yGrid))
+            {
+                return false;
+            }
+
+        }
+        return true;
     }
 
     public Ship[] getPlayerShips() {
