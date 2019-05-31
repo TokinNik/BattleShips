@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 public class Shadow extends android.support.v7.widget.AppCompatImageView
 {
     public Cell.CellType type;
+    public int deckCount;
 
     public Shadow(Context context) {
         super(context);
@@ -27,5 +28,13 @@ public class Shadow extends android.support.v7.widget.AppCompatImageView
 
     public void setType(Cell.CellType type) {
         this.type = type;
+    }
+
+    public int getDeckCount() {
+        return deckCount;
+    }
+
+    public void setDeckCount(int deckCount) {
+        this.deckCount = deckCount;
     }
 }

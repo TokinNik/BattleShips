@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.tokovoynr.battleships.R;
 import com.tokovoynr.battleships.UI.MainActivity;
+import com.tokovoynr.battleships.game.ShootResult;
 
 import java.util.ArrayList;
 
@@ -36,8 +37,8 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
     private boolean targetFlag = false;
     private boolean relocateFlag = false;
     private int borderX1, borderY1, borderX2, borderY2;
-    private int selectedCell;
-    private int relocatedCell;
+    private Cell selectedCell;
+    private Cell relocatedCell;
     private float scale;
     private int displayWidth;
     private int displayHeight;
@@ -103,7 +104,7 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
                             //Log.d(TAG, "MOVE ROOT " + x + "  " + y);
                             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
                                     new ViewGroup.MarginLayoutParams((int)getResources().getDimension(R.dimen.cell_size),
-                                                            (int)getResources().getDimension(R.dimen.cell_size) * selectedItem.getType().ordinal()));
+                                                            (int)getResources().getDimension(R.dimen.cell_size) * selectedItem.getDeckCount()));
 
                             if (x < borderX2 && x > borderX1 && y < borderY2 && y > borderY1)
                             {
@@ -112,15 +113,14 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
                                 if (checkCellsBorder(x, y, lp))
                                 {
 
-                                    if (!MainActivity.getGameLogic().checkPosition(((Cell)view.findViewWithTag(String.valueOf(selectedCell))).getxGrid(),
-                                            ((Cell)view.findViewWithTag(String.valueOf(selectedCell))).getyGrid()))
+                                    if (!MainActivity.getGameLogic().checkPosition(selectedCell.getIntTag()))
                                     {
-                                        setRedErrCells(((Cell)view.findViewWithTag(String.valueOf(selectedCell))));
+                                        //setRedErrCells(selectedCell);
                                         Log.d(TAG, "checkPosition false");
                                     }
                                     else if (!redErrCells.isEmpty())
                                     {
-                                        clearRedErrCells();
+                                        //clearRedErrCells();
                                         Log.d(TAG, "checkPosition true");
                                     }
                                     return false;
@@ -141,21 +141,59 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
                             if (targetFlag)
                             {
                                 targetFlag = false;
-                                ((Cell)view.findViewWithTag(String.valueOf(selectedCell))).setType(selectedItem.getType());//TODO setShipsCell
-                                ((TextView)view.findViewById(R.id.textView_selected_cell)).setText(((Cell)view.findViewWithTag(String.valueOf(selectedCell))).getCordString(selectedCell));
 
-                                if(MainActivity.getGameLogic().setShip(selectedCell, selectedItem.getType().ordinal()))
+                                if (selectedCell.getType() == Cell.CellType.EMPTY)
                                 {
-                                    Log.d(TAG, "setShip true");
+                                    if(relocateFlag)
+                                    {
+                                        relocateFlag = false;
+                                        if(MainActivity.getGameLogic().replaceShip(relocatedCell.getIntTag(), selectedCell.getIntTag()))
+                                        {
+                                            Log.d(TAG, "replaceShip true");
+                                            selectedCell.setType(selectedItem.getType());
+                                            MainActivity.getGameLogic().removeShip(relocatedCell.getIntTag());
+                                            MainActivity.getGameLogic().logAllFields();
+                                            ((TextView)view.findViewById(R.id.textView_selected_cell)).setText(selectedCell.getCordString(selectedCell.getIntTag()));
+                                        }
+                                        else
+                                        {
+                                            Log.d(TAG, "replaceShip false");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        ShootResult[] results = MainActivity.getGameLogic().setShip(selectedCell.getIntTag(), selectedItem.getDeckCount());
+                                        if(results.length != 0)
+                                        {
+                                            Log.d(TAG, "setShip true");
+                                            Cell cell;
+                                            for (ShootResult result : results)
+                                            {
+
+                                                cell = view.findViewWithTag(String.valueOf(result.getNumArg1()));
+                                                cell.setType(result.getType());
+                                                cell.setPartNum(result.getNumArg2());
+
+                                            }
+                                            ((TextView) view.findViewById(R.id.textView_selected_cell)).setText(selectedCell.getCordString(selectedCell.getIntTag()));
+                                        }
+                                        else
+                                        {
+                                            Log.d(TAG, "setShip false");
+                                        }
+                                    }
+
+
                                 }
-                                else
-                                    Log.d(TAG, "setShip false");
 
                             }
-                            else if(relocateFlag)
+                            else
                             {
-                                relocateFlag = false;
-                                ((Cell)view.findViewWithTag(String.valueOf(relocatedCell))).setType(selectedItem.getType());//TODO setShipsCell
+                                if (relocateFlag)
+                                {
+                                    MainActivity.getGameLogic().removeShip(relocatedCell.getIntTag());
+                                    MainActivity.getGameLogic().logAllFields();
+                                }
                             }
 
                             root.removeView(selectedItem);
@@ -255,7 +293,7 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
 
     private void setRedErrCells(Cell cell)
     {
-        int tag = Integer.parseInt(cell.getTag().toString());
+        int tag = cell.getIntTag();
         switch (cell.getType())
         {
             case SHIP_1:
@@ -386,6 +424,10 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
     @Override
     public void onCellTouch(View v, MotionEvent event)
     {
+        if (event.getActionMasked() == MotionEvent.ACTION_DOWN)
+        {
+            ((TextView)view.findViewById(R.id.textView_selected_cell)).setText(((Cell)v).getCordString(((Cell) v).getIntTag()));
+        }
         onTouch(v, event);
     }
 
@@ -400,6 +442,7 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
                 touchFlag = true;
                 offsetX = (int) event.getX();
                 offsetY = (int) event.getY();
+                int scaleY = 1;
                 Shadow shadow = new Shadow(view.getContext());
 
                 switch(v.getId())
@@ -409,16 +452,22 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
                         shadow.setType(Cell.CellType.SHIP_1);
                         break;
                     case R.id.dnd_ship_2:
-                        shadow.setImageDrawable(getResources().getDrawable(R.drawable.ship_3));
-                        shadow.setType(Cell.CellType.SHIP_3);
+                        shadow.setImageDrawable(getResources().getDrawable(R.drawable.ship_2));
+                        shadow.setType(Cell.CellType.SHIP_2);
+                        offsetY += (int)getResources().getDimension(R.dimen.cell_size);
+                        scaleY = 2;
                         break;
                     case R.id.dnd_ship_3:
-                        shadow.setImageDrawable(getResources().getDrawable(R.drawable.ship_3_mid_up));
+                        shadow.setImageDrawable(getResources().getDrawable(R.drawable.ship_3));
                         shadow.setType(Cell.CellType.SHIP_3);
+                        offsetY += (int)getResources().getDimension(R.dimen.cell_size);
+                        scaleY = 3;
                         break;
                     case R.id.dnd_ship_4:
-                        shadow.setImageDrawable(getResources().getDrawable(R.drawable.ship_3_stern_up));
+                        shadow.setImageDrawable(getResources().getDrawable(R.drawable.ship_4));
                         shadow.setType(Cell.CellType.SHIP_4);
+                        offsetY += (int)getResources().getDimension(R.dimen.cell_size) * 2;
+                        scaleY = 4;
                         break;
                     case R.id.dnd_ship_5:
                         shadow.setImageDrawable(getResources().getDrawable(R.drawable.mine_active));
@@ -432,8 +481,8 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
                                 shadow.setImageDrawable(((Cell) v).getDrawable());
                                 shadow.setType(((Cell) v).getType());
                                 relocateFlag = true;
-                                relocatedCell = Integer.parseInt((String) v.getTag());
-                                ((Cell) v).setType(Cell.CellType.EMPTY);//TODO removeShipsCell
+                                relocatedCell = (Cell)v;
+                                ((Cell) v).setType(Cell.CellType.EMPTY);
                             }
                             else
                             {
@@ -454,9 +503,10 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
                 shadow.setPivotY(0);
                 shadow.setScaleX(scale);
                 shadow.setScaleY(scale);
+                shadow.setDeckCount(scaleY);
                 shadow.setScaleType(ImageView.ScaleType.FIT_XY);
                 shadow.setBackgroundColor(Color.BLACK);
-                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams((int)getResources().getDimension(R.dimen.cell_size), (int)getResources().getDimension(R.dimen.cell_size) * shadow.getType().ordinal());
+                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams((int)getResources().getDimension(R.dimen.cell_size), (int)getResources().getDimension(R.dimen.cell_size) * scaleY);
                 layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                 if (!relocateFlag)
                 {
@@ -530,10 +580,16 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
                         {
                             if(cord[0] + size >= eX)
                             {
-                                lp.setMargins(cord[0], cord[1], 0, 0);
+                                int shift = 0;
+                                if (selectedItem.getType() == Cell.CellType.SHIP_2 || selectedItem.getType() == Cell.CellType.SHIP_3)
+                                    shift = (int)(getResources().getDimension(R.dimen.cell_size) * scale);
+                                else if (selectedItem.getType() == Cell.CellType.SHIP_4)
+                                    shift = (int)(getResources().getDimension(R.dimen.cell_size) * scale) * 2;
+
+                                lp.setMargins(cord[0], cord[1] - shift, 0, 0);
                                 //Log.d(TAG, "---- " + cord[0] + " " + cord[1]);
                                 selectedItem.setLayoutParams(lp);
-                                selectedCell = i;
+                                selectedCell = view.findViewWithTag(String.valueOf(i));
                                 return true;
                             }
                             else

@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.tokovoynr.battleships.R;
+import com.tokovoynr.battleships.game.Ship;
 
 public class Cell extends android.support.v7.widget.AppCompatImageView implements View.OnTouchListener
 {
@@ -23,31 +24,37 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
         SHIP_3,
         SHIP_4,
         MINE,
-        ERR
+        ERR,
+
     }
     public static final String TAG = "CELL_VIEW";
     private OnCellListener listener;
     private CellType type = CellType.EMPTY;
-    private int xGrid = 1;
-    private int yGrid = 1;
+    private Ship.ShipDirection direction = Ship.ShipDirection.UP;
+    private int partNum = 0;
+    private boolean destroyed = false;
+    private boolean playersField = true;
 
 
     public Cell(Context context)
     {
         super(context);
         setOnTouchListener(this);
-        int[] cord = getCordInt(Integer.parseInt(getTag().toString()));
-        xGrid = cord[1];
-        yGrid = cord[0];
     }
 
     public Cell(Context context, @Nullable AttributeSet attrs)
     {
         super(context, attrs);
         setOnTouchListener(this);
-        int[] cord = getCordInt(Integer.parseInt(getTag().toString()));
-        xGrid = cord[1];
-        yGrid = cord[0];
+    }
+
+    void clear()
+    {
+        type = CellType.EMPTY;
+        direction = Ship.ShipDirection.UP;
+        partNum = 0;
+        destroyed = false;
+        changeCellState(null,null,0);
     }
 
     @Override
@@ -93,43 +100,128 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
         void onCellTouch(View v, MotionEvent event);
     }
 
-    public void setType(CellType type)
+    public void changeCellState(@Nullable CellType type, @Nullable Ship.ShipDirection direction, int partNum)
     {
+        if (type == null)
+            type = this.type;
+        if (direction == null)
+            direction = this.direction;
+
         switch (type)
         {
             case EMPTY:
                 Drawable img = getResources().getDrawable(R.drawable.cell);
                 setImageDrawable(img);
-                Log.d(TAG, "EMPTY");
+                //Log.d(TAG, "EMPTY");
                 break;
             case SHIP_1:
-                setImageDrawable(getResources().getDrawable(R.drawable.ship_1_up));
-                Log.d(TAG, "SHIP_1");
+                switch (direction)
+                {
+                    case UP:
+                        if (destroyed)
+                            if(playersField)
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_1_up));
+                            else
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_1_up));
+                        else
+                            if(playersField)
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_1_up));
+                            else
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_1_up));
+                        break;
+                    case RIGHT:
+                        if (destroyed)
+                            if(playersField)
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_1_right));
+                            else
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_1_right));
+                        else
+                        if(playersField)
+                            setImageDrawable(getResources().getDrawable(R.drawable.ship_1_right));
+                        else
+                            setImageDrawable(getResources().getDrawable(R.drawable.ship_1_right));
+                        break;
+                    case LEFT://
+                        break;
+                    case DOWN://
+                        break;
+                }
+                //Log.d(TAG, "SHIP_1");
                 break;
             case SHIP_2:
-                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_head_up));
-                Log.d(TAG, "SHIP_2");
+                //TODO setRotation() вместо switch(direction) проверить
+                switch (partNum)
+                {
+                    case 1:
+                        setImageDrawable(getResources().getDrawable(R.drawable.ship_3_head_up));
+                        break;
+                    case 2:
+                        setImageDrawable(getResources().getDrawable(R.drawable.ship_3_stern_up));
+                        break;
+                    default:
+                        break;
+                }
+
+                //Log.d(TAG, "SHIP_2");
                 break;
             case SHIP_3:
-                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_mid_up));
-                Log.d(TAG, "SHIP_3");
+                switch (partNum)
+                {
+                    case 1:
+                        setImageDrawable(getResources().getDrawable(R.drawable.ship_3_head_up));
+                        break;
+                    case 2:
+                        setImageDrawable(getResources().getDrawable(R.drawable.ship_3_mid_up));
+                        break;
+                    case 3:
+                        setImageDrawable(getResources().getDrawable(R.drawable.ship_3_stern_up));
+                        break;
+                    default:
+                        break;
+                }
+                //Log.d(TAG, "SHIP_3");
                 break;
             case SHIP_4:
-                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_stern_up));
-                Log.d(TAG, "SHIP_4");
+                switch (partNum)
+                {
+                    case 1:
+                        setImageDrawable(getResources().getDrawable(R.drawable.ship_3_head_up));
+                        break;
+                    case 2:
+                        setImageDrawable(getResources().getDrawable(R.drawable.ship_3_mid_up));
+                        break;
+                    case 3:
+                        setImageDrawable(getResources().getDrawable(R.drawable.ship_3_mid_up));
+                        break;
+                    case 4:
+                        setImageDrawable(getResources().getDrawable(R.drawable.ship_3_stern_up));
+                        break;
+                    default:
+                        break;
+                }
+                // Log.d(TAG, "SHIP_4");
                 break;
             case MINE:
-                setImageDrawable(getResources().getDrawable(R.drawable.mine_active));
-                Log.d(TAG, "MINE");
+                if (destroyed)
+                    if(playersField)
+                        setImageDrawable(getResources().getDrawable(R.drawable.mine_active));
+                    else
+                        setImageDrawable(getResources().getDrawable(R.drawable.mine_active));
+                else
+                if(playersField)
+                    setImageDrawable(getResources().getDrawable(R.drawable.mine_active));
+                else
+                    setImageDrawable(getResources().getDrawable(R.drawable.mine_active));
+                //Log.d(TAG, "MINE");
                 break;
             case ERR:
                 if (this.type != CellType.EMPTY)
                     setImageDrawable(getResources().getDrawable(R.drawable.red_box));
-                Log.d(TAG, "ERR");
+                //Log.d(TAG, "ERR");
                 break;
             default:
                 setImageDrawable(getResources().getDrawable(R.drawable.red_box));
-                Log.d(TAG, "DEF");
+                //Log.d(TAG, "DEF");
                 break;
         }
         this.type = type;
@@ -200,20 +292,53 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
         return coordinate;
     }
 
-    public int getxGrid() {
-        return xGrid;
+    public int getIntTag()
+    {
+        return Integer.parseInt(getTag().toString());
     }
 
-    public void setxGrid(int xGrid) {
-        this.xGrid = xGrid;
+    public void setType(CellType type)
+    {
+        this.type = type;
+        changeCellState(null, null, partNum);
     }
 
-    public int getyGrid() {
-        return yGrid;
+    public boolean isPlayersField() {
+        return playersField;
     }
 
-    public void setyGrid(int yGrid) {
-        this.yGrid = yGrid;
+    public void setPlayersField(boolean playersField) {
+        this.playersField = playersField;
+    }
+
+    public Ship.ShipDirection getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Ship.ShipDirection direction)
+    {
+        this.direction = direction;
+        changeCellState(null, null, partNum);
+    }
+
+    public int getPartNum() {
+        return partNum;
+    }
+
+    public void setPartNum(int partNum)
+    {
+        this.partNum = partNum;
+        changeCellState(null, null, partNum);
+    }
+
+    public boolean isDestroyed() {
+        return destroyed;
+    }
+
+    public void setDestroyed(boolean destroyed)
+    {
+        this.destroyed = destroyed;
+        changeCellState(null, null, partNum);
     }
 
     public void setListener(OnCellListener listener) {
