@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -77,8 +78,6 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
                 Log.d(TAG, "DOWN CELL " + getTag() + " " + type);
                 if (type != CellType.ERR)
                 {
-                    int[] cord = new int[2];
-                    getLocationOnScreen(cord);
                     listener.onCellTouch(v, event);
                 }
                 break;
@@ -102,10 +101,13 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
 
     public void changeCellState(@Nullable CellType type, @Nullable Ship.ShipDirection direction, int partNum)
     {
+        Log.d(TAG, "changeCellState: type= " + type + " dir= " + direction + " pnum= " + partNum);
+
         if (type == null)
             type = this.type;
         if (direction == null)
             direction = this.direction;
+        Log.d(TAG, "changeCellState2: type= " + type + " dir= " + direction + " pnum= " + partNum);
 
         switch (type)
         {
@@ -115,38 +117,30 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
                 //Log.d(TAG, "EMPTY");
                 break;
             case SHIP_1:
+                if (destroyed)
+                    if(playersField)
+                        setImageDrawable(getResources().getDrawable(R.drawable.ship_1_up));
+                    else
+                        setImageDrawable(getResources().getDrawable(R.drawable.ship_1_up));
+                else if(playersField)
+                    setImageDrawable(getResources().getDrawable(R.drawable.ship_1_up));
+                else
+                    setImageDrawable(getResources().getDrawable(R.drawable.ship_1_up));
                 switch (direction)
                 {
                     case UP:
-                        if (destroyed)
-                            if(playersField)
-                                setImageDrawable(getResources().getDrawable(R.drawable.ship_1_up));
-                            else
-                                setImageDrawable(getResources().getDrawable(R.drawable.ship_1_up));
-                        else
-                            if(playersField)
-                                setImageDrawable(getResources().getDrawable(R.drawable.ship_1_up));
-                            else
-                                setImageDrawable(getResources().getDrawable(R.drawable.ship_1_up));
+                        setRotation(0f);
+                        break;
+                    case LEFT:
+                        setRotation(270f);
+                        break;
+                    case DOWN:
+                        setRotation(180f);
                         break;
                     case RIGHT:
-                        if (destroyed)
-                            if(playersField)
-                                setImageDrawable(getResources().getDrawable(R.drawable.ship_1_right));
-                            else
-                                setImageDrawable(getResources().getDrawable(R.drawable.ship_1_right));
-                        else
-                        if(playersField)
-                            setImageDrawable(getResources().getDrawable(R.drawable.ship_1_right));
-                        else
-                            setImageDrawable(getResources().getDrawable(R.drawable.ship_1_right));
-                        break;
-                    case LEFT://
-                        break;
-                    case DOWN://
+                        setRotation(90f);
                         break;
                 }
-                //Log.d(TAG, "SHIP_1");
                 break;
             case SHIP_2:
                 //TODO setRotation() вместо switch(direction) проверить

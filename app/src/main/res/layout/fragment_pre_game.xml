@@ -25,6 +25,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:background="@color/BG_sea_color"
+                android:onClick="onClick"
                 android:text="@string/exit" />
 
             <TextView
@@ -46,6 +48,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:background="@color/BG_sea_color"
+                android:onClick="onClick"
                 android:text="@string/ready" />
         </LinearLayout>
 
@@ -1643,60 +1647,131 @@
     </TableLayout>
     </RelativeLayout>
 
+        <ImageView
+            android:id="@+id/button_rotate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/ship_buttons_layout"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="0dp"
+            android:src="@mipmap/ic_launcher_round" />
+
         <LinearLayout
             android:id="@+id/ship_buttons_layout"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="70dp"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="0dp"
+            android:background="@color/BG_sea_color"
             android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/dnd_ship_1"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@color/colorPrimary"
-                android:padding="5dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ship_1_up" />
+                android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/dnd_ship_2"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/colorPrimary"
-                android:padding="5dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ship_2" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/dnd_ship_3"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/colorPrimary"
-                android:padding="5dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ship_3" />
+                    <ImageView
+                        android:id="@+id/dnd_ship_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:padding="5dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ship_1_up" />
 
-            <ImageView
-                android:id="@+id/dnd_ship_4"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@color/colorPrimary"
-                android:padding="5dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/ship_4" />
+                    <ImageView
+                        android:id="@+id/dnd_ship_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:padding="5dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ship_2" />
+
+                    <ImageView
+                        android:id="@+id/dnd_ship_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:padding="5dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ship_3" />
+
+                    <ImageView
+                        android:id="@+id/dnd_ship_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:padding="5dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ship_4" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:visibility="gone"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/dnd_ship_1_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:padding="5dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ship_1_right" />
+
+                    <ImageView
+                        android:id="@+id/dnd_ship_2_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:padding="5dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ship_2"
+                        android:rotation="90"
+                        />
+
+                    <ImageView
+                        android:id="@+id/dnd_ship_3_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:padding="5dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ship_3"
+                        android:rotation="90"/>
+
+                    <ImageView
+                        android:id="@+id/dnd_ship_4_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:padding="5dp"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ship_4"
+                        android:rotation="90"/>
+
+                </LinearLayout>
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/dnd_ship_5"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@color/colorPrimary"
                 android:padding="5dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/mine_active" />

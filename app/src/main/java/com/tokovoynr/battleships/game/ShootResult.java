@@ -17,6 +17,7 @@ public class ShootResult
     }
     private ResultType result;
     private Cell.CellType type;
+    private Ship.ShipDirection direction;
     private int numArg1;
     private int numArg2;
 
@@ -30,6 +31,13 @@ public class ShootResult
         this.type = type;
         this.numArg1 = num1;
         this.numArg2 = num2;
+    }
+    public ShootResult(ResultType result, Cell.CellType type, Ship.ShipDirection direction, int num1)
+    {
+        this.result = result;
+        this.type = type;
+        this.direction = direction;
+        this.numArg1 = num1;
     }
 
     public void setResult(ResultType result) {
@@ -58,5 +66,13 @@ public class ShootResult
 
     public void setNumArg2(int numArg2) {
         this.numArg2 = numArg2;
+    }
+
+    public Ship.ShipDirection getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Ship.ShipDirection direction) {
+        this.direction = direction;
     }
 }

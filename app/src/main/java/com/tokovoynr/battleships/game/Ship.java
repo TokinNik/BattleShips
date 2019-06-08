@@ -12,7 +12,6 @@ public class Ship
         DOWN,
         RIGHT,
         LEFT;
-
     }
     public static final String TAG = "SHIP";
     private int deckCount;
@@ -44,6 +43,25 @@ public class Ship
             cell = 0;
         }
         onDesk = false;
+    }
+
+    void rotate()
+    {
+        switch (direction)
+        {
+            case UP:
+                direction = ShipDirection.RIGHT;
+                break;
+            case RIGHT:
+                direction = ShipDirection.DOWN;
+                break;
+            case DOWN:
+                direction = ShipDirection.LEFT;
+                break;
+            case LEFT:
+                direction = ShipDirection.UP;
+                break;
+        }
     }
 
     public boolean destroyPart(int id)

@@ -4,11 +4,14 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
+import com.tokovoynr.battleships.game.Ship;
+
 
 public class Shadow extends android.support.v7.widget.AppCompatImageView
 {
     public Cell.CellType type;
     public int deckCount;
+    public Ship.ShipDirection direction;
 
     public Shadow(Context context) {
         super(context);
@@ -36,5 +39,13 @@ public class Shadow extends android.support.v7.widget.AppCompatImageView
 
     public void setDeckCount(int deckCount) {
         this.deckCount = deckCount;
+    }
+
+    public Ship.ShipDirection getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Ship.ShipDirection direction) {
+        this.direction = direction;
     }
 }

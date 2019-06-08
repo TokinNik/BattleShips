@@ -81,7 +81,7 @@ public class GameLogic
     public ShootResult[] setShip(int anchorCell, int deckCount)//Этап расстановки
     {
 
-        for (int i = 0; i < MAX_SHIP_COUNT + MAX_MINE_COUNT; i++)//fixme вожможно надо перестроить архитектуру
+        for (int i = 0; i < MAX_SHIP_COUNT + MAX_MINE_COUNT; i++)
         {
             if (!playerShips[i].isOnDesk() && playerShips[i].getDeckCount() == deckCount)
             {
@@ -164,52 +164,95 @@ public class GameLogic
         return new ShootResult[0];
     }
 
-    public void removeShip(int anchorCell)//Этап расстановки
+    public ShootResult[] removeShip(int removeCell)//Этап расстановки
     {
+        ShootResult[] results;
+        int anchorCell;
+        try
+        {
+            anchorCell = findCell(removeCell, true).getShip().getAnchorCell();
+        }
+        catch (NullPointerException c)
+        {
+            Log.e(TAG, "LogicCell with id " + removeCell + " don't have ship");
+            return new ShootResult[0];
+        }
         for (int i = 0; i < MAX_SHIP_COUNT + MAX_MINE_COUNT; i++)
         {
             if (playerShips[i].isOnDesk() && playerShips[i].getAnchorCell() == anchorCell)
             {
                 playerShips[i].clear();
-                findCell(anchorCell, true).clear();
-                break;
+                results = new ShootResult[(playerShips[i].getDeckCount() > 4 ? 1: playerShips[i].getDeckCount())];//fixme если время будет
+                int j = 0;
+                for (int cellId : playerShips[i].getCells())
+                {
+                    LogicCell cell = findCell(cellId, true);
+                    if (cell == null)
+                        continue;
+                    results[j] = new ShootResult(ShootResult.ResultType.SHIP_DESTROY, CellType.EMPTY, cellId, 0);
+                    cell.clear();
+                    j++;
+                }
+                return results;
             }
-
         }
+        return new ShootResult[0];
     }
 
-    public boolean replaceShip(int anchorCellOld, int anchorCellNew)//Этап расстановки
+    public ShootResult[] rotateShip(int rotateCell)//Этап расстановки
     {
+        ShootResult[] results = new ShootResult[0];
+        int anchorCell;
+        try
+        {
+            anchorCell = findCell(rotateCell, true).getShip().getAnchorCell();
+        }
+        catch (NullPointerException c)
+        {
+            Log.e(TAG, "LogicCell with id " + rotateCell + " don't have ship");
+            return new ShootResult[0];
+        }
         for (int i = 0; i < MAX_SHIP_COUNT + MAX_MINE_COUNT; i++)
         {
-            if (playerShips[i].isOnDesk() && playerShips[i].getAnchorCell() == anchorCellOld)
+            if (playerShips[i].isOnDesk() && playerShips[i].getAnchorCell() == anchorCell)
             {
-                playerShips[i].setAnchorCell(anchorCellNew);
-                findCell(anchorCellOld, true).clear();
-                findCell(anchorCellNew, true).setShip(playerShips[i]);
-                switch (playerShips[i].getDeckCount())//TODO доделать для остальных клеток караблей
+                switch (playerShips[i].getDeckCount())
                 {
                     case 1:
-                        findCell(anchorCellNew, true).setType(CellType.SHIP_1);
+                        playerShips[i].rotate();
+                        results = new ShootResult[1];
+                        results[0] = new ShootResult(ShootResult.ResultType.SHIP_PART, CellType.SHIP_1, playerShips[i].getDirection(), anchorCell);
                         break;
                     case 2:
-                        findCell(anchorCellNew, true).setType(CellType.SHIP_2);
+                        switch (playerShips[i].getDirection())
+                        {
+                            case UP:
+
+                                break;
+                            case RIGHT:
+
+                                break;
+                            case DOWN:
+
+                                break;
+                            case LEFT:
+
+                                break;
+                        }
                         break;
                     case 3:
-                        findCell(anchorCellNew, true).setType(CellType.SHIP_3);
                         break;
                     case 4:
-                    findCell(anchorCellNew, true).setType(CellType.SHIP_4);
                         break;
-                    case 5:
-                    findCell(anchorCellNew, true).setType(CellType.MINE);
-                        break;
-
                 }
-                return true;
+
+
+
+                return results;
             }
         }
-        return false;
+
+        return new ShootResult[0];
     }
 
     public void switchTurn()//Этап игры
@@ -434,7 +477,7 @@ public class GameLogic
         }
     }
 
-    private int mathCountAroundCell(LogicCell logicCell)//Этап расстановки
+    private int mathCountAroundCell(LogicCell logicCell)//Этап игры
     {
         int num = 0;
 

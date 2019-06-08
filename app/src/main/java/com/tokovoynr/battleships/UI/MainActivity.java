@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
     private static GameLogic gameLogic;
     private FragmentManager fragmentManager;
     private LinearLayout mainLayout;
-    private ScaleGestureDetector detector;
+    private ScaleGestureDetector scaleDetector;
 
 
     @Override
@@ -48,8 +49,7 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
         fragmentManager = getSupportFragmentManager();
         mainLayout = findViewById(R.id.mainLayout);
         currentFragment = TAG;
-        detector = new ScaleGestureDetector(this, new ScaleListener());
-
+        scaleDetector = new ScaleGestureDetector(this, new ScaleListener());
 
         gameLogic = new GameLogic();
 
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
             case R.id.button_one_app_game:
                 setFragment(PreGameFragment.TAG);
                 break;
-            case R.id.button_settings2:
+            case R.id.button_settings2://TODO удалить после тестов
                 setFragment(GameFragment.TAG);
                 break;
             case R.id.button_shop:
@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
                         .commit();
                 mainLayout.setVisibility(View.INVISIBLE);
                 currentFragment = tag;
+                gameLogic.clearAll();
                 Log.d(TAG, "set fragment " + tag);
                 break;
             case GameFragment.TAG:
@@ -228,13 +229,29 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
         }
 
     }
+    @Override
+    public void onPreGameClick(View view)
+    {
+        switch (view.getId())
+        {
+            case R.id.button_ready:
+                setFragment(GameFragment.TAG);
+                Log.d(TAG, ": !!!!!!!!!!");
+                break;
+            case R.id.button_exit:
+                setFragment(MainActivity.TAG);
+                break;
+            default:
+                break;
+        }
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event)
     {
         if (currentFragment.equals(PreGameFragment.TAG))
         {
-            detector.onTouchEvent(event);
+            scaleDetector.onTouchEvent(event);
         }
         return super.onTouchEvent(event);
     }

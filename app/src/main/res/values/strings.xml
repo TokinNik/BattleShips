@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BattleShips++</string>
+    <string name="app_name">Battle Ships +</string>
     <string name="action_settings">Settings</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -29,4 +29,5 @@
     <string name="m">М</string>
     <string name="ready">Готов</string>
     <string name="exit">Выход</string>
+    <string name="lobby_settings">Настройки комнаты</string>
 </resources>
