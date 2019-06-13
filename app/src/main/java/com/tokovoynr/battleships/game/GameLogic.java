@@ -78,7 +78,7 @@ public class GameLogic
         this.enemyShips = enemyShips;
     }
 
-    public ShootResult[] setShip(int anchorCell, int deckCount)//Этап расстановки
+    public ShootResult[] setShip(int anchorCell, int deckCount, Ship.ShipDirection direction)//Этап расстановки
     {
 
         for (int i = 0; i < MAX_SHIP_COUNT + MAX_MINE_COUNT; i++)
@@ -89,6 +89,7 @@ public class GameLogic
                 LogicCell cell;
                 ShootResult[] result = new ShootResult[0];
                 cell = findCell(anchorCell, true);
+                playerShips[i].setDirection(direction);
                 switch (deckCount)
                 {
                     case 1:
@@ -96,62 +97,204 @@ public class GameLogic
                         cell.setShip(playerShips[i]);
                         cells = new int[]{anchorCell};
                         playerShips[i].setCells(cells);
-                        result = new ShootResult[]{new ShootResult(ShootResult.ResultType.SHIP_PART, CellType.SHIP_1, anchorCell, 1)};
+                        result = new ShootResult[]{new ShootResult(direction, CellType.SHIP_1,anchorCell, 1)};
                         break;
                     case 2:
-                        if((anchorCell - 12) > 0)
+                        cell.setType(CellType.SHIP_2);
+                        cell.setShip(playerShips[i]);
+                        switch (playerShips[i].getDirection())
                         {
-                            cell.setType(CellType.SHIP_2);
-                            cell.setShip(playerShips[i]);
-                            findCell(anchorCell - 12, true).setShip(playerShips[i]);
-                            cells = new int[]{anchorCell, anchorCell - 12};
-                            playerShips[i].setCells(cells);
-                            result = new ShootResult[]{new ShootResult(ShootResult.ResultType.SHIP_PART, CellType.SHIP_2, anchorCell, 2),
-                                                        new ShootResult(ShootResult.ResultType.SHIP_PART, CellType.SHIP_2, anchorCell-12, 1)};
+                            case UP:
+                                if((anchorCell - 12) > 0)
+                                {
+                                    findCell(anchorCell - 12, true).setShip(playerShips[i]);
+                                    cells = new int[]{anchorCell, anchorCell - 12};
+                                    playerShips[i].setCells(cells);
+                                    result = new ShootResult[]{new ShootResult(direction, CellType.SHIP_2, anchorCell, 2),
+                                            new ShootResult(direction, CellType.SHIP_2, anchorCell-12, 1)};
+                                }
+                                else
+                                    return new ShootResult[0];
+                                break;
+                            case RIGHT:
+                                if((anchorCell%12) > 0)
+                                {
+                                    findCell(anchorCell + 1, true).setShip(playerShips[i]);
+                                    cells = new int[]{anchorCell, anchorCell + 1};
+                                    playerShips[i].setCells(cells);
+                                    result = new ShootResult[]{new ShootResult(direction, CellType.SHIP_2, cells[0], 2),
+                                            new ShootResult(direction, CellType.SHIP_2, cells[1], 1)};
+                                }
+                                else
+                                    return new ShootResult[0];
+                                break;
+                            case DOWN:
+                                if((anchorCell + 12) < 145)
+                                {
+                                    findCell(anchorCell + 12, true).setShip(playerShips[i]);
+                                    cells = new int[]{anchorCell, anchorCell + 12};
+                                    playerShips[i].setCells(cells);
+                                    result = new ShootResult[]{new ShootResult(direction, CellType.SHIP_2, cells[0], 2),
+                                            new ShootResult(direction, CellType.SHIP_2, cells[1], 1)};
+                                }
+                                else
+                                    return new ShootResult[0];
+                                break;
+                            case LEFT:
+                                if((anchorCell%12) > 1)
+                                {
+                                    findCell(anchorCell - 1, true).setShip(playerShips[i]);
+                                    cells = new int[]{anchorCell, anchorCell - 1};
+                                    playerShips[i].setCells(cells);
+                                    result = new ShootResult[]{new ShootResult(direction, CellType.SHIP_2, cells[0], 2),
+                                            new ShootResult(direction, CellType.SHIP_2, cells[1], 1)};
+                                }
+                                else
+                                    return new ShootResult[0];
+                                break;
                         }
-                        else
-                            return new ShootResult[0];
                         break;
                     case 3:
-                        if((anchorCell - 12) > 0 && (anchorCell + 12) < 145)
+                        cell.setType(CellType.SHIP_3);
+                        cell.setShip(playerShips[i]);
+                        switch (playerShips[i].getDirection())
                         {
-                            cell.setType(CellType.SHIP_3);
-                            cell.setShip(playerShips[i]);
-                            findCell(anchorCell - 12, true).setShip(playerShips[i]);
-                            findCell(anchorCell + 12, true).setShip(playerShips[i]);
-                            cells = new int[]{anchorCell, anchorCell - 12, anchorCell + 12};
-                            playerShips[i].setCells(cells);
-                            result = new ShootResult[]{new ShootResult(ShootResult.ResultType.SHIP_PART, CellType.SHIP_3, anchorCell, 2),
-                                    new ShootResult(ShootResult.ResultType.SHIP_PART, CellType.SHIP_3, anchorCell-12, 1),
-                                    new ShootResult(ShootResult.ResultType.SHIP_PART, CellType.SHIP_3, anchorCell+12, 3)};
+                            case UP:
+                                if((anchorCell - 12) > 0 && (anchorCell + 12) < 145)
+                                {
+                                    findCell(anchorCell - 12, true).setShip(playerShips[i]);
+                                    findCell(anchorCell + 12, true).setShip(playerShips[i]);
+                                    cells = new int[]{anchorCell, anchorCell - 12, anchorCell + 12};
+                                    playerShips[i].setCells(cells);
+                                    result = new ShootResult[]{new ShootResult(direction, CellType.SHIP_3, anchorCell, 2),
+                                            new ShootResult(direction, CellType.SHIP_3, anchorCell - 12, 1),
+                                            new ShootResult(direction, CellType.SHIP_3, anchorCell + 12, 3)};
+                                }
+                                else
+                                    return new ShootResult[0];
+                                break;
+                            case RIGHT:
+                                if((anchorCell - 1)%12 > 0 && (anchorCell + 1)%12 > 1)
+                                {
+                                    findCell(anchorCell - 1, true).setShip(playerShips[i]);
+                                    findCell(anchorCell + 1, true).setShip(playerShips[i]);
+                                    cells = new int[]{anchorCell, anchorCell + 1, anchorCell - 1};
+                                    playerShips[i].setCells(cells);
+                                    result = new ShootResult[]{new ShootResult(direction, CellType.SHIP_3, anchorCell, 2),
+                                            new ShootResult(direction, CellType.SHIP_3, anchorCell + 1, 1),
+                                            new ShootResult(direction, CellType.SHIP_3, anchorCell - 1, 3)};
+                                }
+                                else
+                                    return new ShootResult[0];
+                                break;
+                            case DOWN:
+                                if((anchorCell - 12) > 0 && (anchorCell + 12) < 145)
+                                {
+                                    findCell(anchorCell - 1, true).setShip(playerShips[i]);
+                                    findCell(anchorCell + 1, true).setShip(playerShips[i]);
+                                    cells = new int[]{anchorCell, anchorCell + 12, anchorCell - 12};
+                                    playerShips[i].setCells(cells);
+                                    result = new ShootResult[]{new ShootResult(direction, CellType.SHIP_3, anchorCell, 2),
+                                            new ShootResult(direction, CellType.SHIP_3, anchorCell + 12, 1),
+                                            new ShootResult(direction, CellType.SHIP_3, anchorCell - 12, 3)};
+                                }
+                                else
+                                    return new ShootResult[0];
+                                break;
+                            case LEFT:
+                                if((anchorCell - 1)%12 > 0 && (anchorCell + 1)%12 > 1)
+                                {
+                                    findCell(anchorCell - 1, true).setShip(playerShips[i]);
+                                    findCell(anchorCell + 1, true).setShip(playerShips[i]);
+                                    cells = new int[]{anchorCell, anchorCell + 1, anchorCell - 1};
+                                    playerShips[i].setCells(cells);
+                                    result = new ShootResult[]{new ShootResult(direction, CellType.SHIP_3, anchorCell, 2),
+                                            new ShootResult(direction, CellType.SHIP_3, anchorCell + 1, 3),
+                                            new ShootResult(direction, CellType.SHIP_3, anchorCell - 1, 1)};
+                                }
+                                else
+                                    return new ShootResult[0];
+                                break;
                         }
-                        else
-                            return new ShootResult[0];
+
                         break;
                     case 4:
-                        if((anchorCell - 24) > 0 && (anchorCell + 12) < 145)
+                        cell.setType(CellType.SHIP_4);
+                        cell.setShip(playerShips[i]);
+                        switch (playerShips[i].getDirection())
                         {
-                            cell.setType(CellType.SHIP_4);
-                            cell.setShip(playerShips[i]);
-                            findCell(anchorCell - 12, true).setShip(playerShips[i]);
-                            findCell(anchorCell + 12, true).setShip(playerShips[i]);
-                            findCell(anchorCell - 24, true).setShip(playerShips[i]);
-                            cells = new int[]{anchorCell, anchorCell - 12, anchorCell - 24, anchorCell + 12};
-                            playerShips[i].setCells(cells);
-                            result = new ShootResult[]{new ShootResult(ShootResult.ResultType.SHIP_PART, CellType.SHIP_4, anchorCell, 3),
-                                    new ShootResult(ShootResult.ResultType.SHIP_PART, CellType.SHIP_4, anchorCell-12, 2),
-                                    new ShootResult(ShootResult.ResultType.SHIP_PART, CellType.SHIP_4, anchorCell-24, 1),
-                                    new ShootResult(ShootResult.ResultType.SHIP_PART, CellType.SHIP_4, anchorCell+12, 4)};
+                            case UP:
+                                if((anchorCell - 24) > 0 && (anchorCell + 12) < 145)
+                                {
+                                    findCell(anchorCell - 12, true).setShip(playerShips[i]);
+                                    findCell(anchorCell + 12, true).setShip(playerShips[i]);
+                                    findCell(anchorCell - 24, true).setShip(playerShips[i]);
+                                    cells = new int[]{anchorCell, anchorCell - 12, anchorCell - 24, anchorCell + 12};
+                                    playerShips[i].setCells(cells);
+                                    result = new ShootResult[]{new ShootResult(direction, CellType.SHIP_4, anchorCell, 3),
+                                            new ShootResult(direction, CellType.SHIP_4, anchorCell - 12, 2),
+                                            new ShootResult(direction, CellType.SHIP_4, anchorCell - 24, 1),
+                                            new ShootResult(direction, CellType.SHIP_4, anchorCell + 12, 4)};
+                                }
+                                else
+                                    return new ShootResult[0];
+                                break;
+                            case RIGHT:
+                                if((anchorCell - 1)%12 > 0 && (anchorCell + 2)%12 > 1)
+                                {
+                                    findCell(anchorCell - 1, true).setShip(playerShips[i]);
+                                    findCell(anchorCell + 1, true).setShip(playerShips[i]);
+                                    findCell(anchorCell - 2, true).setShip(playerShips[i]);
+                                    cells = new int[]{anchorCell, anchorCell - 1, anchorCell + 2, anchorCell + 1};
+                                    playerShips[i].setCells(cells);
+                                    result = new ShootResult[]{new ShootResult(direction, CellType.SHIP_4, anchorCell, 3),
+                                            new ShootResult(direction, CellType.SHIP_4, anchorCell - 1, 4),
+                                            new ShootResult(direction, CellType.SHIP_4, anchorCell + 2, 1),
+                                            new ShootResult(direction, CellType.SHIP_4, anchorCell + 1, 2)};
+                                }
+                                else
+                                    return new ShootResult[0];
+                                break;
+                            case DOWN:
+                                if((anchorCell - 12) > 0 && (anchorCell + 24) < 145)
+                                {
+                                    findCell(anchorCell - 12, true).setShip(playerShips[i]);
+                                    findCell(anchorCell + 12, true).setShip(playerShips[i]);
+                                    findCell(anchorCell + 24, true).setShip(playerShips[i]);
+                                    cells = new int[]{anchorCell, anchorCell - 12, anchorCell + 24, anchorCell + 12};
+                                    playerShips[i].setCells(cells);
+                                    result = new ShootResult[]{new ShootResult(direction, CellType.SHIP_4, anchorCell, 3),
+                                            new ShootResult(direction, CellType.SHIP_4, anchorCell - 12, 4),
+                                            new ShootResult(direction, CellType.SHIP_4, anchorCell + 24, 1),
+                                            new ShootResult(direction, CellType.SHIP_4, anchorCell + 12, 2)};
+                                }
+                                else
+                                    return new ShootResult[0];
+                                break;
+                            case LEFT:
+                                if((anchorCell - 2)%12 > 0 && (anchorCell + 1)%12 > 1)
+                                {
+                                    findCell(anchorCell - 1, true).setShip(playerShips[i]);
+                                    findCell(anchorCell + 1, true).setShip(playerShips[i]);
+                                    findCell(anchorCell - 2, true).setShip(playerShips[i]);
+                                    cells = new int[]{anchorCell, anchorCell - 1, anchorCell - 2, anchorCell + 1};
+                                    playerShips[i].setCells(cells);
+                                    result = new ShootResult[]{new ShootResult(direction, CellType.SHIP_4, anchorCell, 3),
+                                            new ShootResult(direction, CellType.SHIP_4, anchorCell - 1, 2),
+                                            new ShootResult(direction, CellType.SHIP_4, anchorCell - 2, 1),
+                                            new ShootResult(direction, CellType.SHIP_4, anchorCell + 1, 4)};
+                                }
+                                else
+                                    return new ShootResult[0];
+                                break;
                         }
-                        else
-                            return new ShootResult[0];
                         break;
                     case 5:
                         cell.setType(CellType.MINE);
                         cell.setShip(playerShips[i]);
                         cells = new int[]{anchorCell};
                         playerShips[i].setCells(cells);
-                        result = new ShootResult[]{new ShootResult(ShootResult.ResultType.SHIP_PART, CellType.MINE, anchorCell, 1)};
+                        result = new ShootResult[]{new ShootResult(direction, CellType.MINE, anchorCell, 1)};
                         break;
                 }
                 cell.setShip(playerShips[i]);
@@ -196,62 +339,6 @@ public class GameLogic
                 return results;
             }
         }
-        return new ShootResult[0];
-    }
-
-    public ShootResult[] rotateShip(int rotateCell)//Этап расстановки
-    {
-        ShootResult[] results = new ShootResult[0];
-        int anchorCell;
-        try
-        {
-            anchorCell = findCell(rotateCell, true).getShip().getAnchorCell();
-        }
-        catch (NullPointerException c)
-        {
-            Log.e(TAG, "LogicCell with id " + rotateCell + " don't have ship");
-            return new ShootResult[0];
-        }
-        for (int i = 0; i < MAX_SHIP_COUNT + MAX_MINE_COUNT; i++)
-        {
-            if (playerShips[i].isOnDesk() && playerShips[i].getAnchorCell() == anchorCell)
-            {
-                switch (playerShips[i].getDeckCount())
-                {
-                    case 1:
-                        playerShips[i].rotate();
-                        results = new ShootResult[1];
-                        results[0] = new ShootResult(ShootResult.ResultType.SHIP_PART, CellType.SHIP_1, playerShips[i].getDirection(), anchorCell);
-                        break;
-                    case 2:
-                        switch (playerShips[i].getDirection())
-                        {
-                            case UP:
-
-                                break;
-                            case RIGHT:
-
-                                break;
-                            case DOWN:
-
-                                break;
-                            case LEFT:
-
-                                break;
-                        }
-                        break;
-                    case 3:
-                        break;
-                    case 4:
-                        break;
-                }
-
-
-
-                return results;
-            }
-        }
-
         return new ShootResult[0];
     }
 

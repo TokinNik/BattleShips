@@ -45,22 +45,20 @@ public class Ship
         onDesk = false;
     }
 
-    void rotate()
+    public static ShipDirection rotate(ShipDirection oldDirection)
     {
-        switch (direction)
+        switch (oldDirection)
         {
             case UP:
-                direction = ShipDirection.RIGHT;
-                break;
+                return ShipDirection.RIGHT;
             case RIGHT:
-                direction = ShipDirection.DOWN;
-                break;
+                return ShipDirection.DOWN;
             case DOWN:
-                direction = ShipDirection.LEFT;
-                break;
+                return ShipDirection.LEFT;
             case LEFT:
-                direction = ShipDirection.UP;
-                break;
+                return ShipDirection.UP;
+            default:
+                return ShipDirection.UP;
         }
     }
 

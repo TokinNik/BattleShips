@@ -9,9 +9,9 @@ import com.tokovoynr.battleships.game.Ship;
 
 public class Shadow extends android.support.v7.widget.AppCompatImageView
 {
-    public Cell.CellType type;
-    public int deckCount;
-    public Ship.ShipDirection direction;
+    private Cell.CellType type;
+    private int deckCount;
+    private Ship.ShipDirection direction = Ship.ShipDirection.UP;
 
     public Shadow(Context context) {
         super(context);

@@ -109,12 +109,27 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
             direction = this.direction;
         Log.d(TAG, "changeCellState2: type= " + type + " dir= " + direction + " pnum= " + partNum);
 
+        switch (direction)
+        {
+            case UP:
+                setRotation(0f);
+                break;
+            case LEFT:
+                setRotation(270f);
+                break;
+            case DOWN:
+                setRotation(180f);
+                break;
+            case RIGHT:
+                setRotation(90f);
+                break;
+        }
+
         switch (type)
         {
             case EMPTY:
                 Drawable img = getResources().getDrawable(R.drawable.cell);
                 setImageDrawable(img);
-                //Log.d(TAG, "EMPTY");
                 break;
             case SHIP_1:
                 if (destroyed)
@@ -126,21 +141,6 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
                     setImageDrawable(getResources().getDrawable(R.drawable.ship_1_up));
                 else
                     setImageDrawable(getResources().getDrawable(R.drawable.ship_1_up));
-                switch (direction)
-                {
-                    case UP:
-                        setRotation(0f);
-                        break;
-                    case LEFT:
-                        setRotation(270f);
-                        break;
-                    case DOWN:
-                        setRotation(180f);
-                        break;
-                    case RIGHT:
-                        setRotation(90f);
-                        break;
-                }
                 break;
             case SHIP_2:
                 //TODO setRotation() вместо switch(direction) проверить
@@ -155,8 +155,6 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
                     default:
                         break;
                 }
-
-                //Log.d(TAG, "SHIP_2");
                 break;
             case SHIP_3:
                 switch (partNum)
@@ -173,7 +171,6 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
                     default:
                         break;
                 }
-                //Log.d(TAG, "SHIP_3");
                 break;
             case SHIP_4:
                 switch (partNum)
@@ -193,7 +190,6 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
                     default:
                         break;
                 }
-                // Log.d(TAG, "SHIP_4");
                 break;
             case MINE:
                 if (destroyed)
@@ -206,16 +202,13 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
                     setImageDrawable(getResources().getDrawable(R.drawable.mine_active));
                 else
                     setImageDrawable(getResources().getDrawable(R.drawable.mine_active));
-                //Log.d(TAG, "MINE");
                 break;
             case ERR:
                 if (this.type != CellType.EMPTY)
                     setImageDrawable(getResources().getDrawable(R.drawable.red_box));
-                //Log.d(TAG, "ERR");
                 break;
             default:
                 setImageDrawable(getResources().getDrawable(R.drawable.red_box));
-                //Log.d(TAG, "DEF");
                 break;
         }
         this.type = type;

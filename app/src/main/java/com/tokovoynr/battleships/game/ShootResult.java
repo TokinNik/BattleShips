@@ -32,12 +32,12 @@ public class ShootResult
         this.numArg1 = num1;
         this.numArg2 = num2;
     }
-    public ShootResult(ResultType result, Cell.CellType type, Ship.ShipDirection direction, int num1)
+    public ShootResult(Ship.ShipDirection direction, Cell.CellType type, int num1, int num2)
     {
-        this.result = result;
         this.type = type;
         this.direction = direction;
         this.numArg1 = num1;
+        this.numArg2 = num2;
     }
 
     public void setResult(ResultType result) {

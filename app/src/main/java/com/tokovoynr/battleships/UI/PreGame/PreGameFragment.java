@@ -150,11 +150,11 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
                                 {
                                     if(relocateFlag)
                                         relocateFlag = false;
-                                    setShip(selectedCell.getIntTag(), selectedItem.getType().ordinal());
+                                    setShip(selectedCell.getIntTag(), selectedItem.getType().ordinal(), selectedItem.getDirection());
                                 }
                                 else if (relocateFlag)
                                 {
-                                    setShip(relocatedCell.getIntTag(), relocatedCell.getType().ordinal());
+                                    setShip(relocatedCell.getIntTag(), relocatedCell.getType().ordinal(), relocatedCell.getDirection());
                                 }
                             }
                             else
@@ -162,7 +162,7 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
                                 if (relocateFlag)
                                 {
                                     relocateFlag = false;
-                                    setShip(relocatedCell.getIntTag(), relocatedCell.getType().ordinal());
+                                    setShip(relocatedCell.getIntTag(), relocatedCell.getType().ordinal(), relocatedCell.getDirection());
                                 }
                             }
 
@@ -417,7 +417,7 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
 
         if (event.getActionMasked() == MotionEvent.ACTION_DOWN)
         {
-            ((TextView)view.findViewById(R.id.textView_selected_cell)).setText(((Cell)v).getCordString(((Cell) v).getIntTag()));
+            ((TextView)view.findViewById(R.id.textView_selected_cell)).setText( ((Cell)v).getCordString(((Cell) v).getIntTag()) + "(" + v.getTag() + ")" );
         }
 
         onTouch(v, event);
@@ -432,7 +432,7 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
                 Log.d(TAG, "DOWN DnDView");
                 if (v.getId() == R.id.button_rotate && activeShip != 0)
                 {
-                    rotateShip(activeShip);
+                    rotateShip();
                     return false;
                 }
 
@@ -498,17 +498,16 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
                                         break;
                                 }
                                 shadow.setType(((Cell) v).getType());
+                                shadow.setDirection(((Cell) v).getDirection());
                                 relocateFlag = true;
+                                targetFlag = true;
                                 relocatedCell = (Cell)v;
                                 ShootResult[] results = MainActivity.getGameLogic().removeShip(relocatedCell.getIntTag());
                                 if(results.length != 0)
                                 {
-                                    Cell cell;
                                     for (ShootResult result : results)
                                     {
-                                        cell = view.findViewWithTag(String.valueOf(result.getNumArg1()));
-                                        cell.setType(result.getType());
-                                        cell.setPartNum(result.getNumArg2());
+                                        ((Cell)view.findViewWithTag(String.valueOf(result.getNumArg1()))).clear();
                                     }
                                 }
                             }
@@ -522,7 +521,7 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
                         else
                         {
                             shadow.setImageDrawable(getResources().getDrawable(R.drawable.red_box));
-                            shadow.setType(Cell.CellType.MINE);
+                            shadow.setType(Cell.CellType.ERR);
                         }
                         break;
 
@@ -535,7 +534,9 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
                 shadow.setDeckCount(scaleY);
                 shadow.setScaleType(ImageView.ScaleType.FIT_XY);
                 shadow.setBackgroundColor(Color.BLACK);
-                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams((int)getResources().getDimension(R.dimen.cell_size), (int)getResources().getDimension(R.dimen.cell_size) * scaleY);
+                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                        new ViewGroup.MarginLayoutParams((int)getResources().getDimension(R.dimen.cell_size),
+                                                 (int)getResources().getDimension(R.dimen.cell_size) * scaleY));
                 layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                 ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) view.findViewById(R.id.ship_buttons_layout).getLayoutParams();
                 if (!relocateFlag)
@@ -546,7 +547,7 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
                 {
                     int[] cord = new int[2];
                     v.getLocationOnScreen(cord);
-                    layoutParams.setMargins(cord[0], cord[1], 0, 0);
+                    layoutParams.setMargins(cord[0], 0, 0, displayHeight - cord[1] - (int)getResources().getDimension(R.dimen.cell_size) * scaleY / 2);
                 }
 
                 shadow.setLayoutParams(layoutParams);
@@ -566,10 +567,10 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
         return false;
     }
 
-    private void setShip(int anchorCell, int deckCount)
+    private void setShip(int anchorCell, int deckCount, Ship.ShipDirection direction)
     {
         Log.d(TAG, "setShip: " + anchorCell + " " + deckCount);
-        ShootResult[] results = MainActivity.getGameLogic().setShip(anchorCell, deckCount);
+        ShootResult[] results = MainActivity.getGameLogic().setShip(anchorCell, deckCount, direction);
         if(results.length != 0)
         {
             Log.d(TAG, "setShip true");
@@ -580,9 +581,9 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
                 cell = view.findViewWithTag(String.valueOf(result.getNumArg1()));
                 cell.setType(result.getType());
                 cell.setPartNum(result.getNumArg2());
-
+                cell.setDirection(result.getDirection());
             }
-            activeShip = cell.getIntTag();
+            activeShip = anchorCell;
         }
         else
         {
@@ -590,26 +591,24 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
         }
     }
 
-    private void rotateShip(int anchorCell)
+    private  void rotateShip()
     {
-        ShootResult[] results = MainActivity.getGameLogic().rotateShip(anchorCell);
-        if(results.length != 0)
-        {
-            Log.d(TAG, "rotateShip true");
-            Cell cell;
-            for (ShootResult result : results)
-            {
+        int deckCount;
+        Ship.ShipDirection direction;
 
-                cell = view.findViewWithTag(String.valueOf(result.getNumArg1()));
-                cell.setDirection(result.getDirection());
+        deckCount = ((Cell)view.findViewWithTag(String.valueOf(activeShip))).getType().ordinal();
+        direction = Ship.rotate(((Cell)view.findViewWithTag(String.valueOf(activeShip))).getDirection());
 
-            }
-        }
-        else
+        ShootResult[] results = MainActivity.getGameLogic().removeShip(activeShip);
+
+        for (ShootResult result : results)
         {
-            Log.d(TAG, "rotateShip false");
+            ((Cell)view.findViewWithTag(String.valueOf(result.getNumArg1()))).clear();
         }
+
+        setShip(activeShip, deckCount, direction);
     }
+
 
     private boolean checkCellsBorder(int eX, int eY, RelativeLayout.LayoutParams lp)
     {
