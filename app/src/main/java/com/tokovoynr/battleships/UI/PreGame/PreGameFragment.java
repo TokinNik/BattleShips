@@ -653,12 +653,28 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
                             if(cord[0] + size >= eX)
                             {
                                 int shift = 0;
-                                if (selectedItem.getType() == Cell.CellType.SHIP_2 || selectedItem.getType() == Cell.CellType.SHIP_3)
+                                Cell.CellType type = selectedItem.getType();
+                                if (type == Cell.CellType.SHIP_2 || type == Cell.CellType.SHIP_3)
                                     shift = (int)(getResources().getDimension(R.dimen.cell_size) * scale);
-                                else if (selectedItem.getType() == Cell.CellType.SHIP_4)
+                                else if (type == Cell.CellType.SHIP_4)
                                     shift = (int)(getResources().getDimension(R.dimen.cell_size) * scale) * 2;
 
-                                lp.setMargins(cord[0], cord[1] - shift, 0, 0);
+                                //lp.setMargins(cord[0], cord[1] - shift, 0, 0);
+                                switch (selectedItem.getDirection())//fixme kostil' pzdc, ewe i kosachni'
+                                {
+                                    case UP:
+                                        lp.setMargins(cord[0], cord[1] - shift, 0, 0);
+                                        break;
+                                    case RIGHT:
+                                        lp.setMargins(cord[0] + ((type == Cell.CellType.SHIP_4) ? (int)(shift * 1.5) : shift * 2), cord[1], 0, 0);
+                                        break;
+                                    case DOWN:
+                                        lp.setMargins(cord[0] + ((type == Cell.CellType.SHIP_4) ? (int)(shift * 0.5) : shift), cord[1] + ((type == Cell.CellType.SHIP_4) ? (int)(shift * 1.5) : shift * 2), 0, 0);
+                                        break;
+                                    case LEFT:
+                                        lp.setMargins(cord[0] - shift, cord[1] + ((type == Cell.CellType.SHIP_4) ? (int)(shift * 0.5) : shift), 0, 0);
+                                        break;
+                                }
                                 //Log.d(TAG, "---- " + cord[0] + " " + cord[1]);
                                 selectedItem.setLayoutParams(lp);
                                 selectedCell = view.findViewWithTag(String.valueOf(i));

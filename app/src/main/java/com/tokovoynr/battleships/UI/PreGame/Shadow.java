@@ -37,7 +37,8 @@ public class Shadow extends android.support.v7.widget.AppCompatImageView
         return deckCount;
     }
 
-    public void setDeckCount(int deckCount) {
+    public void setDeckCount(int deckCount)
+    {
         this.deckCount = deckCount;
     }
 
@@ -45,7 +46,23 @@ public class Shadow extends android.support.v7.widget.AppCompatImageView
         return direction;
     }
 
-    public void setDirection(Ship.ShipDirection direction) {
+    public void setDirection(Ship.ShipDirection direction)
+    {
         this.direction = direction;
+        switch (direction)
+        {
+            case UP:
+                setRotation(0f);
+                break;
+            case LEFT:
+                setRotation(270f);
+                break;
+            case DOWN:
+                setRotation(180f);
+                break;
+            case RIGHT:
+                setRotation(90f);
+                break;
+        }
     }
 }
