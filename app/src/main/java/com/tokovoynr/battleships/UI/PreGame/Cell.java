@@ -101,13 +101,14 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
 
     public void changeCellState(@Nullable CellType type, @Nullable Ship.ShipDirection direction, int partNum)
     {
-        Log.d(TAG, "changeCellState: type= " + type + " dir= " + direction + " pnum= " + partNum);
+        //Log.d(TAG, "changeCellState: type= " + type + " dir= " + direction + " pnum= " + partNum);
 
         if (type == null)
             type = this.type;
         if (direction == null)
             direction = this.direction;
-        Log.d(TAG, "changeCellState2: type= " + type + " dir= " + direction + " pnum= " + partNum);
+
+        //Log.d(TAG, "changeCellState2: type= " + type + " dir= " + direction + " pnum= " + partNum);
 
         switch (direction)
         {
@@ -134,13 +135,13 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
             case SHIP_1:
                 if (destroyed)
                     if(playersField)
-                        setImageDrawable(getResources().getDrawable(R.drawable.ship_1_up));
+                        setImageDrawable(getResources().getDrawable(R.drawable.ship_1));
                     else
-                        setImageDrawable(getResources().getDrawable(R.drawable.ship_1_up));
+                        setImageDrawable(getResources().getDrawable(R.drawable.ship_1));
                 else if(playersField)
-                    setImageDrawable(getResources().getDrawable(R.drawable.ship_1_up));
+                    setImageDrawable(getResources().getDrawable(R.drawable.ship_1));
                 else
-                    setImageDrawable(getResources().getDrawable(R.drawable.ship_1_up));
+                    setImageDrawable(getResources().getDrawable(R.drawable.ship_1));
                 break;
             case SHIP_2:
                 //TODO setRotation() вместо switch(direction) проверить

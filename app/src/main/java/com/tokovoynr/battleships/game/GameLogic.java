@@ -5,6 +5,8 @@ import android.util.Log;
 import com.tokovoynr.battleships.UI.PreGame.Cell;
 import com.tokovoynr.battleships.UI.PreGame.Cell.CellType;
 
+import java.util.Arrays;
+
 public class GameLogic
 {
     public static final String TAG = "GAME_LOGIC";
@@ -54,14 +56,14 @@ public class GameLogic
         {
             for (i = 0; i < 12; i++)
             {
-                playerCells[i][j] = new LogicCell(12 * i + j +1);
+                playerCells[i][j] = new LogicCell(12 * i + j + 1);
             }
         }
         for (int j = 0; j < 12; j++)
         {
             for (i = 0; i < 12; i++)
             {
-                enemyCells[i][j] = new LogicCell(12 * i + j +1);
+                enemyCells[i][j] = new LogicCell(12 * i + j + 1);
             }
         }
 
@@ -244,7 +246,7 @@ public class GameLogic
                                 {
                                     findCell(anchorCell - 1, true).setShip(playerShips[i]);
                                     findCell(anchorCell + 1, true).setShip(playerShips[i]);
-                                    findCell(anchorCell - 2, true).setShip(playerShips[i]);
+                                    findCell(anchorCell + 2, true).setShip(playerShips[i]);
                                     cells = new int[]{anchorCell, anchorCell - 1, anchorCell + 2, anchorCell + 1};
                                     playerShips[i].setCells(cells);
                                     result = new ShootResult[]{new ShootResult(direction, CellType.SHIP_4, anchorCell, 3),
@@ -324,7 +326,6 @@ public class GameLogic
         {
             if (playerShips[i].isOnDesk() && playerShips[i].getAnchorCell() == anchorCell)
             {
-                playerShips[i].clear();
                 results = new ShootResult[(playerShips[i].getDeckCount() > 4 ? 1: playerShips[i].getDeckCount())];//fixme если время будет
                 int j = 0;
                 for (int cellId : playerShips[i].getCells())
@@ -336,6 +337,7 @@ public class GameLogic
                     cell.clear();
                     j++;
                 }
+                playerShips[i].clear();
                 return results;
             }
         }
@@ -466,102 +468,92 @@ public class GameLogic
         return null;
     }
 
-    public boolean checkPosition(int id)//Этап расстановки
+    public boolean checkPosition(int intTag, int deckCount, Ship.ShipDirection direction)//Этап расстановки
     {
-        int checkI = -1;
-        for (int i = 0; i < MAX_SHIP_COUNT + MAX_MINE_COUNT; i++)
+        int[] cord;
+        int[] cells = new int[0];
+        switch (deckCount)
         {
-            if (playerShips[i].getAnchorCell() == id)
-            {
-                checkI = i;
+            case 1:
+                cells = new int[]{intTag};
                 break;
-            }
-        }
-        if (checkI == -1)
-            return true;
-        else
-        {
-            int[] cord = Cell.getCordInt(playerShips[checkI].getAnchorCell());
-            int i1 = -1, j1 = -1;
-            int i2 = 2, j2 = 2;
-            switch (playerShips[checkI].getDeckCount())
-            {
-                case 1:
-                    break;
-                case 2:
-                    switch (playerShips[checkI].getDirection())
-                    {
-                        case UP:
-                            j1 = -2;
-                            break;
-                        case DOWN:
-                            j2 = 3;
-                            break;
-                        case LEFT:
-                            i1 = -2;
-                            break;
-                        case RIGHT:
-                            i2 = 3;
-                            break;
-                    }
-                    break;
-                case 3:
-                    switch (playerShips[checkI].getDirection())
-                    {
-                        case UP:
-                            j1 = -2;
-                            j2 = 3;
-                            break;
-                        case DOWN:
-                            j1 = -2;
-                            j2 = 3;
-                            break;
-                        case LEFT:
-                            i1 = -2;
-                            i2 = 3;
-                            break;
-                        case RIGHT:
-                            i1 = -2;
-                            i2 = 3;
-                            break;
-                    }
-                    break;
-                case 4:
-                    switch (playerShips[checkI].getDirection())
-                    {
-                        case UP:
-                            j1 = -3;
-                            j2 = 3;
-                            break;
-                        case DOWN:
-                            j1 = -2;
-                            j2 = 4;
-                            break;
-                        case LEFT:
-                            i1 = -3;
-                            i2 = 3;
-                            break;
-                        case RIGHT:
-                            i1 = -2;
-                            i2 = 4;
-                            break;
-                    }
-                    break;
-                default:
-                    break;
-            }
-            for (int ii = i1; ii < 12; ii++)
-            {
-                for (int jj = j1; jj < j2; jj++)
+            case 2:
+                switch (direction)
                 {
-                    if (playerCells[cord[1]+ii][cord[0]+jj].getShip() != null)
+                    case UP:
+                        cells = new int[]{intTag, intTag - 12};
+                        break;
+                    case RIGHT:
+                        cells = new int[]{intTag, intTag + 1};
+                        break;
+                    case DOWN:
+                        cells = new int[]{intTag, intTag + 12};
+                        break;
+                    case LEFT:
+                        cells = new int[]{intTag, intTag - 1};
+                        break;
+                }
+                break;
+            case 3:
+                switch (direction)
+                {
+                    case DOWN:
+                    case UP:
+                        cells = new int[]{intTag, intTag - 12, intTag + 12};
+                        break;
+                    case RIGHT:
+                    case LEFT:
+                        cells = new int[]{intTag, intTag + 1, intTag -1};
+                        break;
+                }
+                break;
+            case 4:
+                switch (direction)
+                {
+                    case UP:
+                        cells = new int[]{intTag, intTag - 12, intTag - 24, intTag + 12};
+                        break;
+                    case RIGHT:
+                        cells = new int[]{intTag, intTag - 1, intTag + 2, intTag + 1};
+                        break;
+                    case DOWN:
+                        cells = new int[]{intTag, intTag + 12, intTag + 24, intTag - 12};
+                        break;
+                    case LEFT:
+                        cells = new int[]{intTag, intTag - 1, intTag - 2, intTag + 1};
+                        break;
+                }
+                break;
+
+        }
+
+        for (int cell: cells)
+        {
+            if (cell < 0 || cell > 144)
+            {
+                continue;
+            }
+            cord = Cell.getCordInt(cell);
+            cord[0]--;
+            cord[1]--;
+            StringBuilder log = new StringBuilder("||| ");
+            for (int j = cord[0] - 1; j <= cord[0] + 1; j++)
+            {
+                for (int i = cord[1] - 1; i <= cord[1] + 1; i++)
+                {
+                    log.append(" i= ").append(i).append(" j= ").append(j).append(" ||| ");
+                    if (i < 12 && i > -1 && j < 12 && j > -1 && playerCells[i][j].getShip() != null && playerCells[i][j].getShip().getDeckCount() != 5)
                     {
+                        Log.d(TAG, "checkPosition: " + log.toString());
+                        Log.d(TAG, "checkPosition: i= " + i + " j= " + j);
+                        Log.d(TAG, "checkPosition: shipCells = ( " + Arrays.toString(playerCells[i][j].getShip().getCells()) + " )");
+                        Log.d(TAG, "checkPosition: cells = ( " + Arrays.toString(cells) + " )");
                         return false;
                     }
                 }
             }
-            return true;
         }
+        return true;
     }
 
     private int mathCountAroundCell(LogicCell logicCell)//Этап игры

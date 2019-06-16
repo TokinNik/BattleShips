@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
+import com.tokovoynr.battleships.R;
 import com.tokovoynr.battleships.game.Ship;
 
 
@@ -12,6 +13,7 @@ public class Shadow extends android.support.v7.widget.AppCompatImageView
     private Cell.CellType type;
     private int deckCount;
     private Ship.ShipDirection direction = Ship.ShipDirection.UP;
+    private boolean errrMode = false;
 
     public Shadow(Context context) {
         super(context);
@@ -64,5 +66,52 @@ public class Shadow extends android.support.v7.widget.AppCompatImageView
                 setRotation(90f);
                 break;
         }
+    }
+
+    public void enableErr()
+    {
+        errrMode = true;
+
+        switch (deckCount)
+        {
+            case 1:
+                setImageDrawable(getResources().getDrawable(R.drawable.ship_1_err));
+                break;
+            case 2:
+                setImageDrawable(getResources().getDrawable(R.drawable.ship_2_err));
+                break;
+            case 3:
+                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_err));
+                break;
+            case 4:
+                setImageDrawable(getResources().getDrawable(R.drawable.ship_4_err));
+                break;
+        }
+    }
+    public void disableErr()
+    {
+        if(errrMode)
+        {
+            switch (deckCount)
+            {
+                case 1:
+                    setImageDrawable(getResources().getDrawable(R.drawable.ship_1));
+                    break;
+                case 2:
+                    setImageDrawable(getResources().getDrawable(R.drawable.ship_2));
+                    break;
+                case 3:
+                    setImageDrawable(getResources().getDrawable(R.drawable.ship_3));
+                    break;
+                case 4:
+                    setImageDrawable(getResources().getDrawable(R.drawable.ship_4));
+                    break;
+            }
+            errrMode = false;
+        }
+    }
+
+    public boolean isErrrMode() {
+        return errrMode;
     }
 }
