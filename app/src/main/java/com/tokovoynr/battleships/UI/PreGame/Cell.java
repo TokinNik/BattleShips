@@ -25,14 +25,14 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
         SHIP_3,
         SHIP_4,
         MINE,
-        ERR,
+        ERR
 
     }
     public static final String TAG = "CELL_VIEW";
     private OnCellListener listener;
     private CellType type = CellType.EMPTY;
     private Ship.ShipDirection direction = Ship.ShipDirection.UP;
-    private int partNum = 0;
+    private int partNum = -1;
     private boolean destroyed = false;
     private boolean playersField = true;
 
@@ -53,7 +53,7 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
     {
         type = CellType.EMPTY;
         direction = Ship.ShipDirection.UP;
-        partNum = 0;
+        partNum = -1;
         destroyed = false;
         changeCellState(null,null,0);
     }
@@ -130,6 +130,40 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
         {
             case EMPTY:
                 Drawable img = getResources().getDrawable(R.drawable.cell);
+                switch (partNum)
+                {
+                    case -1:
+                        break;
+                    case 0:
+                       img = getResources().getDrawable(R.drawable.cell_num_0);
+                        break;
+                    case 1:
+                        img = getResources().getDrawable(R.drawable.cell_num_1);
+                        break;
+                    case 2:
+                        img = getResources().getDrawable(R.drawable.cell_num_2);
+                        break;
+                    case 3:
+                        img = getResources().getDrawable(R.drawable.cell_num_3);
+                        break;
+                    case 4:
+                        img = getResources().getDrawable(R.drawable.cell_num_4);
+                        break;
+                    case 5:
+                        img = getResources().getDrawable(R.drawable.cell_num_5);
+                        break;
+                    case 6:
+                        img = getResources().getDrawable(R.drawable.cell_num_6);
+                        break;
+                    case 7:
+                        img = getResources().getDrawable(R.drawable.cell_num_7);
+                        break;
+                    case 8:
+                        img = getResources().getDrawable(R.drawable.cell_num_8);
+                        break;
+                    default:
+                        break;
+                }
                 setImageDrawable(img);
                 break;
             case SHIP_1:
@@ -209,7 +243,7 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
                     setImageDrawable(getResources().getDrawable(R.drawable.red_box));
                 break;
             default:
-                setImageDrawable(getResources().getDrawable(R.drawable.red_box));
+                setImageDrawable(getResources().getDrawable(R.drawable.white_box));
                 break;
         }
         this.type = type;

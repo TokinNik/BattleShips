@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -236,7 +235,6 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
         {
             case R.id.button_ready:
                 setFragment(GameFragment.TAG);
-                Log.d(TAG, ": !!!!!!!!!!");
                 break;
             case R.id.button_exit:
                 setFragment(MainActivity.TAG);

@@ -5,9 +5,11 @@ import com.tokovoynr.battleships.UI.PreGame.Cell;
 public class LogicCell
 {
     public static final String TAG = "LOGIC_CELL";
-    private Cell.CellType type;
     private int id;
-    private Ship ship;//???
+
+    private Cell.CellType type;
+    private Ship ship;
+    private int partNum = -1;
 
     LogicCell(int id)
     {
@@ -30,6 +32,7 @@ public class LogicCell
     void clear()
     {
         type = Cell.CellType.EMPTY;
+        partNum = -1;
         ship = null;
     }
 
@@ -52,5 +55,13 @@ public class LogicCell
     public void setShip(Ship ship)
     {
         this.ship = ship;
+    }
+
+    public int getPartNum() {
+        return partNum;
+    }
+
+    public void setPartNum(int partNum) {
+        this.partNum = partNum;
     }
 }

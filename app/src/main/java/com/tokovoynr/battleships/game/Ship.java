@@ -17,7 +17,7 @@ public class Ship
     private int deckCount;
 
     private int anchorCell;
-    private ShipDirection direction;
+    private ShipDirection direction = ShipDirection.UP;;
     private int[] cells;
     private boolean onDesk = false;
     public Ship(int deckCount, ShipDirection direction)

@@ -1,1611 +1,1644 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relative_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".UI.GameFragment">
 
-        <TextView
-            android:id="@+id/game_head"
-            android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/game_head"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_capitulate"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="@string/game"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+            android:background="@color/BG_sea_color"
+            android:onClick="onClick"
+            android:text="@string/capitulate" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
+
+        <TextView
+            android:id="@+id/textView_selected_cell"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/main_field_frame"
-            android:layout_above="@+id/game_footer"
-            android:layout_below="@+id/game_head"
+            android:layout_weight="1"
+            android:fontFamily="monospace"
+            android:gravity="center"
+            android:scaleType="fitXY"
+            android:text=""
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/button_fire"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/BG_sea_color"
+            android:onClick="onClick"
+            android:text="@string/fire" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/main_field_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/game_footer"
+        android:layout_below="@+id/game_head"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="10dp">
+
+        <TableLayout
+            android:id="@+id/main_field"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginStart="0dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginEnd="0dp"
-            android:layout_marginBottom="10dp">
-
-            <TableLayout
-                android:id="@+id/main_field"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true">
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/textView_coord_A1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:fontFamily="monospace"
-
-                        android:text="@string/a"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:typeface="normal" />
-
-                    <TextView
-                        android:id="@+id/textView_coord_A2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:fontFamily="monospace"
-
-                        android:text="@string/b"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:typeface="normal" />
-
-                    <TextView
-                        android:id="@+id/textView_coord_A3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:fontFamily="monospace"
-
-                        android:text="@string/v"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:typeface="normal" />
-
-                    <TextView
-                        android:id="@+id/textView_coord_A4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:fontFamily="monospace"
-
-                        android:text="@string/g"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:typeface="normal" />
-
-                    <TextView
-                        android:id="@+id/textView_coord_A5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:fontFamily="monospace"
-
-                        android:text="@string/d"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:typeface="normal" />
-
-                    <TextView
-                        android:id="@+id/textView_coord_A6"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:fontFamily="monospace"
-
-                        android:text="@string/e"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:typeface="normal" />
-
-                    <TextView
-                        android:id="@+id/textView_coord_A7"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:fontFamily="monospace"
-
-                        android:text="@string/j"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:typeface="normal" />
-
-                    <TextView
-                        android:id="@+id/textView_coord_A8"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:fontFamily="monospace"
-
-                        android:text="@string/z"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:typeface="normal" />
-
-                    <TextView
-                        android:id="@+id/textView_coord_A9"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:fontFamily="monospace"
-
-                        android:text="@string/i"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:typeface="normal" />
-
-                    <TextView
-                        android:id="@+id/textView_coord_A10"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:fontFamily="monospace"
-
-                        android:text="@string/k"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:typeface="normal" />
-
-                    <TextView
-                        android:id="@+id/textView_coord_A11"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:fontFamily="monospace"
-
-                        android:text="@string/l"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:typeface="normal" />
-
-                    <TextView
-                        android:id="@+id/textView_coord_A12"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:fontFamily="monospace"
-
-                        android:text="@string/m"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:typeface="normal" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/textView_coord_N1"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="center"
-                        android:fontFamily="monospace"
-
-                        android:text="1"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:typeface="normal" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_1_1"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="1" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_1_2"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="2" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_1_3"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="3" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_1_4"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="4" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_1_5"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="5" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_1_6"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="6" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_1_7"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="7" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_1_8"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="8" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_1_9"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="9" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_1_10"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="10" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_1_11"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="11" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_1_12"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="12" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/textView_coord_N2"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:layout_gravity="center"
-                        android:fontFamily="monospace"
-
-                        android:text="2"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:typeface="normal" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_2_1"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="13" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_2_2"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="14" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_2_3"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="15" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_2_4"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="16" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_2_5"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="17" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_2_6"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="18" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_2_7"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="19" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_2_8"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="20" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_2_9"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="21" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_2_10"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="22" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_2_11"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="23" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_2_12"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="24" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/textView_coord_N3"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:fontFamily="monospace"
-
-                        android:text="3"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:typeface="normal" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_3_1"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="25" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_3_2"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="26" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_3_3"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="27" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_3_4"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="28" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_3_5"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="29" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_3_6"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="30" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_3_7"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="31" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_3_8"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="32" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_3_9"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="33" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_3_10"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="34" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_3_11"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="35" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_3_12"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="36" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/textView_coord_N4"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:layout_gravity="center"
-                        android:fontFamily="monospace"
-
-                        android:text="4"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:typeface="normal" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_4_1"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="37" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_4_2"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="38" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_4_3"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="39" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_4_4"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="40" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_4_5"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="41" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_4_6"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="42" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_4_7"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="43" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_4_8"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="44" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_4_9"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="45" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_4_10"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="46" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_4_11"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="47" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_4_12"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="48" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/textView_coord_N5"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:layout_gravity="center"
-                        android:fontFamily="monospace"
-
-                        android:text="5"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:typeface="normal" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_5_1"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="49" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_5_2"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="50" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_5_3"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="51" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_5_4"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="52" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_5_5"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="53" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_5_6"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="54" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_5_7"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="55" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_5_8"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="56" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_5_9"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="57" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_5_10"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="58" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_5_11"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="59" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_5_12"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="60" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/textView_coord_N6"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:layout_gravity="center"
-                        android:fontFamily="monospace"
-
-                        android:text="6"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:typeface="normal" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_6_1"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="61" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_6_2"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="62" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_6_3"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="63" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_6_4"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="64" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_6_5"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="65" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_6_6"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="66" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_6_7"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="67" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_6_8"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="68" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_6_9"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="69" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_6_10"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="70" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_6_11"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="71" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_6_12"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="72" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/textView_coord_N7"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:layout_gravity="center"
-                        android:fontFamily="monospace"
-
-                        android:text="7"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:typeface="normal" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_7_1"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="73" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_7_2"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="74" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_7_3"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="75" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_7_4"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="76" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_7_5"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="77" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_7_6"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="78" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_7_7"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="79" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_7_8"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="80" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_7_9"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="81" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_7_10"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="82" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_7_11"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="83" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_7_12"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="84" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/textView_coord_N8"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:layout_gravity="center"
-                        android:fontFamily="monospace"
-
-                        android:text="8"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:typeface="normal" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_8_1"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="85" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_8_2"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="86" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_8_3"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="87" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_8_4"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="88" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_8_5"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="89" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_8_6"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="90" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_8_7"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="91" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_8_8"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="92" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_8_9"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="93" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_8_10"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="94" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_8_11"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="95" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_8_12"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="96" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/textView_coord_N9"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:layout_gravity="center"
-                        android:fontFamily="monospace"
-
-                        android:text="9"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:typeface="normal" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_9_1"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="97" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_9_2"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="98" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_9_3"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="99" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_9_4"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="100" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_9_5"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="101" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_9_6"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="102" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_9_7"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="103" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_9_8"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="104" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_9_9"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="105" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_9_10"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="106" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_9_11"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="107" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_9_12"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="108" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/textView_coord_N10"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:layout_gravity="center"
-                        android:fontFamily="monospace"
-
-                        android:text="10"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:typeface="normal" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_10_1"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="109" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_10_2"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="110" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_10_3"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="111" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_10_4"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="112" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_10_5"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="113" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_10_6"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="114" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_10_7"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="115" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_10_8"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="116" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_10_9"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="117" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_10_10"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="118" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_10_11"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="119" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_10_12"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="120" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/textView_coord_N11"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:layout_gravity="center"
-                        android:fontFamily="monospace"
-
-                        android:text="11"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:typeface="normal" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_11_1"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="121" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_11_2"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="122" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_11_3"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="123" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_11_4"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="124" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_11_5"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="125" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_11_6"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="126" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_11_7"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="127" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_11_8"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="128" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_11_9"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="129" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_11_10"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="130" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_11_11"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="131" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_11_12"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="132" />
-
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/textView_coord_N12"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:layout_gravity="center"
-                        android:fontFamily="monospace"
-
-                        android:text="12"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/black"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:typeface="normal" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_12_1"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="133" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_12_2"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="134" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_12_3"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="135" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_12_4"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="136" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_12_5"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="137" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_12_6"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="138" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_12_7"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="139" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_12_8"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="140" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_12_9"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="141" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_12_10"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="142" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_12_11"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="143" />
-
-                    <com.tokovoynr.battleships.UI.PreGame.Cell
-                        android:id="@+id/cell_12_12"
-                        android:layout_width="@dimen/cell_size"
-                        android:layout_height="@dimen/cell_size"
-                        android:layout_gravity="fill"
-                        android:src="@drawable/cell"
-                        android:scaleType="fitXY"
-                        android:tag="144" />
-
-                </TableRow>
-
-            </TableLayout>
-        </RelativeLayout>
+            android:layout_centerVertical="true">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/textView_coord_A1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="monospace"
+
+                    android:text="@string/a"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
+
+                <TextView
+                    android:id="@+id/textView_coord_A2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="monospace"
+
+                    android:text="@string/b"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
+
+                <TextView
+                    android:id="@+id/textView_coord_A3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="monospace"
+
+                    android:text="@string/v"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
+
+                <TextView
+                    android:id="@+id/textView_coord_A4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="monospace"
+
+                    android:text="@string/g"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
+
+                <TextView
+                    android:id="@+id/textView_coord_A5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="monospace"
+
+                    android:text="@string/d"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
+
+                <TextView
+                    android:id="@+id/textView_coord_A6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="monospace"
+
+                    android:text="@string/e"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
+
+                <TextView
+                    android:id="@+id/textView_coord_A7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="monospace"
+
+                    android:text="@string/j"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
+
+                <TextView
+                    android:id="@+id/textView_coord_A8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="monospace"
+
+                    android:text="@string/z"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
+
+                <TextView
+                    android:id="@+id/textView_coord_A9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="monospace"
+
+                    android:text="@string/i"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
+
+                <TextView
+                    android:id="@+id/textView_coord_A10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="monospace"
+
+                    android:text="@string/k"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
+
+                <TextView
+                    android:id="@+id/textView_coord_A11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="monospace"
+
+                    android:text="@string/l"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
+
+                <TextView
+                    android:id="@+id/textView_coord_A12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="monospace"
+
+                    android:text="@string/m"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/textView_coord_N1"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:fontFamily="monospace"
+
+                    android:text="1"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_1_1"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="1" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_1_2"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="2" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_1_3"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="3" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_1_4"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="4" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_1_5"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="5" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_1_6"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="6" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_1_7"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="7" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_1_8"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="8" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_1_9"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="9" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_1_10"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="10" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_1_11"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="11" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_1_12"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="12" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/textView_coord_N2"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:layout_gravity="center"
+                    android:fontFamily="monospace"
+
+                    android:text="2"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_2_1"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="13" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_2_2"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="14" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_2_3"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="15" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_2_4"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="16" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_2_5"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="17" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_2_6"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="18" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_2_7"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="19" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_2_8"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="20" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_2_9"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="21" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_2_10"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="22" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_2_11"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="23" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_2_12"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="24" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/textView_coord_N3"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:fontFamily="monospace"
+
+                    android:text="3"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_3_1"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="25" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_3_2"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="26" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_3_3"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="27" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_3_4"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="28" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_3_5"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="29" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_3_6"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="30" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_3_7"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="31" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_3_8"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="32" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_3_9"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="33" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_3_10"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="34" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_3_11"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="35" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_3_12"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="36" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/textView_coord_N4"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:layout_gravity="center"
+                    android:fontFamily="monospace"
+
+                    android:text="4"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_4_1"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="37" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_4_2"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="38" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_4_3"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="39" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_4_4"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="40" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_4_5"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="41" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_4_6"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="42" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_4_7"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="43" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_4_8"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="44" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_4_9"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="45" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_4_10"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="46" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_4_11"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="47" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_4_12"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="48" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/textView_coord_N5"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:layout_gravity="center"
+                    android:fontFamily="monospace"
+
+                    android:text="5"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_5_1"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="49" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_5_2"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="50" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_5_3"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="51" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_5_4"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="52" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_5_5"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="53" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_5_6"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="54" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_5_7"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="55" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_5_8"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="56" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_5_9"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="57" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_5_10"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="58" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_5_11"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="59" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_5_12"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="60" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/textView_coord_N6"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:layout_gravity="center"
+                    android:fontFamily="monospace"
+
+                    android:text="6"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_6_1"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="61" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_6_2"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="62" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_6_3"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="63" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_6_4"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="64" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_6_5"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="65" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_6_6"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="66" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_6_7"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="67" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_6_8"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="68" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_6_9"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="69" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_6_10"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="70" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_6_11"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="71" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_6_12"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="72" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/textView_coord_N7"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:layout_gravity="center"
+                    android:fontFamily="monospace"
+
+                    android:text="7"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_7_1"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="73" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_7_2"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="74" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_7_3"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="75" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_7_4"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="76" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_7_5"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="77" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_7_6"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="78" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_7_7"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="79" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_7_8"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="80" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_7_9"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="81" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_7_10"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="82" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_7_11"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="83" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_7_12"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="84" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/textView_coord_N8"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:layout_gravity="center"
+                    android:fontFamily="monospace"
+
+                    android:text="8"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_8_1"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="85" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_8_2"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="86" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_8_3"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="87" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_8_4"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="88" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_8_5"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="89" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_8_6"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="90" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_8_7"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="91" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_8_8"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="92" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_8_9"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="93" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_8_10"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="94" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_8_11"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="95" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_8_12"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="96" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/textView_coord_N9"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:layout_gravity="center"
+                    android:fontFamily="monospace"
+
+                    android:text="9"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_9_1"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="97" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_9_2"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="98" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_9_3"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="99" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_9_4"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="100" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_9_5"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="101" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_9_6"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="102" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_9_7"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="103" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_9_8"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="104" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_9_9"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="105" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_9_10"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="106" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_9_11"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="107" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_9_12"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="108" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/textView_coord_N10"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:layout_gravity="center"
+                    android:fontFamily="monospace"
+
+                    android:text="10"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_10_1"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="109" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_10_2"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="110" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_10_3"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="111" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_10_4"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="112" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_10_5"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="113" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_10_6"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="114" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_10_7"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="115" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_10_8"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="116" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_10_9"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="117" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_10_10"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="118" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_10_11"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="119" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_10_12"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="120" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/textView_coord_N11"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:layout_gravity="center"
+                    android:fontFamily="monospace"
+
+                    android:text="11"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_11_1"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="121" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_11_2"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="122" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_11_3"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="123" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_11_4"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="124" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_11_5"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="125" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_11_6"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="126" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_11_7"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="127" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_11_8"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="128" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_11_9"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="129" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_11_10"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="130" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_11_11"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="131" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_11_12"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="132" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/textView_coord_N12"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:layout_gravity="center"
+                    android:fontFamily="monospace"
+
+                    android:text="12"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:typeface="normal" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_12_1"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="133" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_12_2"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="134" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_12_3"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="135" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_12_4"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="136" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_12_5"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="137" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_12_6"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="138" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_12_7"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="139" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_12_8"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="140" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_12_9"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="141" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_12_10"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="142" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_12_11"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="143" />
+
+                <com.tokovoynr.battleships.UI.PreGame.Cell
+                    android:id="@+id/cell_12_12"
+                    android:layout_width="@dimen/cell_size"
+                    android:layout_height="@dimen/cell_size"
+                    android:layout_gravity="fill"
+                    android:scaleType="fitXY"
+                    android:src="@drawable/cell"
+                    android:tag="144" />
+
+            </TableRow>
+
+        </TableLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/game_footer"
@@ -1613,23 +1646,21 @@
         android:layout_height="100dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="0dp"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="Button" />
         <!--TODO разберись с размерами! -->
 
 
         <Button
-            android:id="@+id/button5"
+            android:id="@+id/button_switch_field"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
             android:layout_weight="1"
-            android:text="Button" />
+            android:onClick="onClick"
+            android:background="@color/BG_sea_color"
+            android:text="@string/switch_to_your_field"
+            android:paddingHorizontal="5dp" />
     </LinearLayout>
 
 </RelativeLayout>

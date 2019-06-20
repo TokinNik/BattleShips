@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tokovoynr.battleships.R;
 import com.tokovoynr.battleships.UI.MainActivity;
@@ -45,8 +46,6 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
     private float scale;
     private int displayWidth;
     private int displayHeight;
-    private ArrayList<Integer> redErrCells;
-    //private long lastClickTime = 0;//fixme прикрути  onDoubleTap у Cell
 
 
     public PreGameFragment()
@@ -80,8 +79,6 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
         DisplayMetrics displaymetrics = getResources().getDisplayMetrics();
         displayWidth = displaymetrics.widthPixels;
         displayHeight = displaymetrics.heightPixels;
-
-        redErrCells = new ArrayList<>();
 
         if (displayWidth < 780)//fixme nado normalno adaptirovat' razmeri
         {
@@ -191,6 +188,8 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
         view.findViewById(R.id.dnd_ship_4).setOnTouchListener(this);
         view.findViewById(R.id.dnd_ship_5).setOnTouchListener(this);
         view.findViewById(R.id.button_rotate).setOnTouchListener(this);
+        view.findViewById(R.id.button_ready).setOnTouchListener(this);
+        view.findViewById(R.id.button_exit).setOnTouchListener(this);
 
         return view;
     }
@@ -278,136 +277,6 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
         Log.d(TAG, ": !!!!!!!!!!");
     }
 
-    private void setRedErrCells(Cell cell)
-    {
-        int tag = cell.getIntTag();
-        switch (cell.getType())
-        {
-            case SHIP_1:
-                ((Cell)view.findViewWithTag(String.valueOf(tag + 1))).setType(Cell.CellType.ERR);
-                ((Cell)view.findViewWithTag(String.valueOf(tag + 11))).setType(Cell.CellType.ERR);
-                ((Cell)view.findViewWithTag(String.valueOf(tag + 12))).setType(Cell.CellType.ERR);
-                ((Cell)view.findViewWithTag(String.valueOf(tag + 13))).setType(Cell.CellType.ERR);
-                ((Cell)view.findViewWithTag(String.valueOf(tag - 1))).setType(Cell.CellType.ERR);
-                ((Cell)view.findViewWithTag(String.valueOf(tag - 11))).setType(Cell.CellType.ERR);
-                ((Cell)view.findViewWithTag(String.valueOf(tag - 12))).setType(Cell.CellType.ERR);
-                ((Cell)view.findViewWithTag(String.valueOf(tag - 13))).setType(Cell.CellType.ERR);
-                redErrCells.add(tag + 1);
-                redErrCells.add(tag + 11);
-                redErrCells.add(tag + 12);
-                redErrCells.add(tag + 13);
-                redErrCells.add(tag - 1);
-                redErrCells.add(tag - 11);
-                redErrCells.add(tag - 12);
-                redErrCells.add(tag - 13);
-                Log.d(TAG, "SHIP_1");
-                break;
-            case SHIP_2:
-                ((Cell)view.findViewWithTag(String.valueOf(tag + 1))).setType(Cell.CellType.ERR);
-                ((Cell)view.findViewWithTag(String.valueOf(tag + 11))).setType(Cell.CellType.ERR);
-                ((Cell)view.findViewWithTag(String.valueOf(tag + 12))).setType(Cell.CellType.ERR);
-                ((Cell)view.findViewWithTag(String.valueOf(tag + 13))).setType(Cell.CellType.ERR);
-                ((Cell)view.findViewWithTag(String.valueOf(tag + 23))).setType(Cell.CellType.ERR);
-                ((Cell)view.findViewWithTag(String.valueOf(tag + 24))).setType(Cell.CellType.ERR);
-                ((Cell)view.findViewWithTag(String.valueOf(tag + 25))).setType(Cell.CellType.ERR);
-                ((Cell)view.findViewWithTag(String.valueOf(tag - 1))).setType(Cell.CellType.ERR);
-                ((Cell)view.findViewWithTag(String.valueOf(tag - 11))).setType(Cell.CellType.ERR);
-                ((Cell)view.findViewWithTag(String.valueOf(tag - 12))).setType(Cell.CellType.ERR);
-                ((Cell)view.findViewWithTag(String.valueOf(tag - 13))).setType(Cell.CellType.ERR);
-                redErrCells.add(tag + 1);
-                redErrCells.add(tag + 11);
-                redErrCells.add(tag + 12);
-                redErrCells.add(tag + 13);
-                redErrCells.add(tag + 23);
-                redErrCells.add(tag + 24);
-                redErrCells.add(tag + 25);
-                redErrCells.add(tag - 1);
-                redErrCells.add(tag - 11);
-                redErrCells.add(tag - 12);
-                redErrCells.add(tag - 13);
-                Log.d(TAG, "SHIP_2");
-                break;
-            case SHIP_3:
-                ((Cell)view.findViewWithTag(String.valueOf(tag + 1))).setType(Cell.CellType.ERR);
-                ((Cell)view.findViewWithTag(String.valueOf(tag + 11))).setType(Cell.CellType.ERR);
-                ((Cell)view.findViewWithTag(String.valueOf(tag + 12))).setType(Cell.CellType.ERR);
-                ((Cell)view.findViewWithTag(String.valueOf(tag + 13))).setType(Cell.CellType.ERR);
-                ((Cell)view.findViewWithTag(String.valueOf(tag + 23))).setType(Cell.CellType.ERR);
-                ((Cell)view.findViewWithTag(String.valueOf(tag + 24))).setType(Cell.CellType.ERR);
-                ((Cell)view.findViewWithTag(String.valueOf(tag + 25))).setType(Cell.CellType.ERR);
-                ((Cell)view.findViewWithTag(String.valueOf(tag - 1))).setType(Cell.CellType.ERR);
-                ((Cell)view.findViewWithTag(String.valueOf(tag - 11))).setType(Cell.CellType.ERR);
-                ((Cell)view.findViewWithTag(String.valueOf(tag - 12))).setType(Cell.CellType.ERR);
-                ((Cell)view.findViewWithTag(String.valueOf(tag - 13))).setType(Cell.CellType.ERR);
-                ((Cell)view.findViewWithTag(String.valueOf(tag - 23))).setType(Cell.CellType.ERR);
-                ((Cell)view.findViewWithTag(String.valueOf(tag - 24))).setType(Cell.CellType.ERR);
-                ((Cell)view.findViewWithTag(String.valueOf(tag - 25))).setType(Cell.CellType.ERR);
-                redErrCells.add(tag + 1);
-                redErrCells.add(tag + 11);
-                redErrCells.add(tag + 12);
-                redErrCells.add(tag + 13);
-                redErrCells.add(tag + 23);
-                redErrCells.add(tag + 24);
-                redErrCells.add(tag + 25);
-                redErrCells.add(tag - 1);
-                redErrCells.add(tag - 11);
-                redErrCells.add(tag - 12);
-                redErrCells.add(tag - 13);
-                redErrCells.add(tag - 23);
-                redErrCells.add(tag - 24);
-                redErrCells.add(tag - 25);
-                Log.d(TAG, "SHIP_3");
-                break;
-            case SHIP_4:
-                Log.d(TAG, "SHIP_4");
-                break;
-            case MINE:
-                Log.d(TAG, "MINE");
-                break;
-            default:
-                if (tag < 131)
-                {
-                    ((Cell) view.findViewWithTag(String.valueOf(tag + 11))).setType(Cell.CellType.ERR);
-                    ((Cell) view.findViewWithTag(String.valueOf(tag + 12))).setType(Cell.CellType.ERR);
-                    ((Cell) view.findViewWithTag(String.valueOf(tag + 13))).setType(Cell.CellType.ERR);
-                    redErrCells.add(tag + 11);
-                    redErrCells.add(tag + 12);
-                    redErrCells.add(tag + 13);
-                }
-                if (tag%12 != 0)
-                {
-                    ((Cell)view.findViewWithTag(String.valueOf(tag + 1))).setType(Cell.CellType.ERR);
-                    redErrCells.add(tag + 1);
-                }
-                if (tag%12 > 1)
-                {
-                    ((Cell)view.findViewWithTag(String.valueOf(tag - 1))).setType(Cell.CellType.ERR);
-                    redErrCells.add(tag - 1);
-                }
-
-                if (tag > 12)
-                {
-                    ((Cell) view.findViewWithTag(String.valueOf(tag - 11))).setType(Cell.CellType.ERR);
-                    ((Cell) view.findViewWithTag(String.valueOf(tag - 12))).setType(Cell.CellType.ERR);
-                    ((Cell) view.findViewWithTag(String.valueOf(tag - 13))).setType(Cell.CellType.ERR);
-                    redErrCells.add(tag - 11);
-                    redErrCells.add(tag - 12);
-                    redErrCells.add(tag - 13);
-                }
-                Log.d(TAG, "DEF");
-                break;
-        }
-    }
-
-    private void clearRedErrCells()
-    {
-        for (int tag: redErrCells)
-        {
-            ((Cell)view.findViewWithTag(String.valueOf(tag))).setType(Cell.CellType.EMPTY);
-        }
-        redErrCells.clear();
-    }
-
     @Override
     public void onCellTouch(View v, MotionEvent event)
     {
@@ -429,6 +298,24 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
                 if (v.getId() == R.id.button_rotate && activeShip != 0)
                 {
                     rotateShip();
+                    return false;
+                }
+                if (v.getId() == R.id.button_ready)
+                {
+                    if (MainActivity.getGameLogic().isCorrectPlacement(true))
+                    {
+                        listener.onPreGameClick(v);
+                        return false;
+                    }
+                    else
+                    {
+                        Toast.makeText(getContext(),"Расставлены не все корабли или мины", Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
+                }
+                if (v.getId() == R.id.button_exit)
+                {
+                    listener.onPreGameClick(v);
                     return false;
                 }
 
@@ -574,7 +461,7 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
     private void setShip(int anchorCell, int deckCount, Ship.ShipDirection direction)
     {
         Log.d(TAG, "setShip: " + anchorCell + " " + deckCount);
-        ShootResult[] results = MainActivity.getGameLogic().setShip(anchorCell, deckCount, direction);
+        ShootResult[] results = MainActivity.getGameLogic().setShip(anchorCell, deckCount, direction, true);
         if(results.length != 0)
         {
             Log.d(TAG, "setShip true");

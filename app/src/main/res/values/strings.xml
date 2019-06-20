@@ -30,4 +30,8 @@
     <string name="ready">Готов</string>
     <string name="exit">Выход</string>
     <string name="lobby_settings">Настройки комнаты</string>
+    <string name="capitulate">Сдаться</string>
+    <string name="fire">Огонь</string>
+    <string name="switch_to_enemy_field">Переключить на поле противника</string>
+    <string name="switch_to_your_field">Переключить на своё поле</string>
 </resources>
