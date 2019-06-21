@@ -33,8 +33,9 @@ public class LogicCell
     void clear()
     {
         type = Cell.CellType.EMPTY;
-        partNum = -1;
         ship = null;
+        partNum = -1;
+        destroyed = false;
     }
 
     public Cell.CellType getType() {

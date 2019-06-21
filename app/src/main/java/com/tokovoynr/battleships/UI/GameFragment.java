@@ -1,6 +1,8 @@
 package com.tokovoynr.battleships.UI;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,6 +17,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tokovoynr.battleships.R;
 import com.tokovoynr.battleships.UI.PreGame.Cell;
@@ -30,6 +33,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Cell
     private int displayHeight;
     private Cell selectedCell;
     private boolean playerDesk = false;
+    private ShootResult lastEnemyStep;
     private GameFragment.OnGameFragmentInteractionListener listener;
 
     public GameFragment()
@@ -70,6 +74,11 @@ public class GameFragment extends Fragment implements View.OnClickListener, Cell
             TableLayout mainField = view.findViewById(R.id.main_field);
             mainField.setScaleX(0.9f);
             mainField.setScaleY(0.9f);
+
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(new ViewGroup.MarginLayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+            ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) mainField.getLayoutParams();
+            lp.setMargins(mlp.leftMargin - 20, mlp.topMargin , 0, 0);
+            mainField.setLayoutParams(lp);//fixme only on my device!!!!!!
         }
 
         root.findViewById(R.id.button_fire).setOnClickListener(this);
@@ -134,7 +143,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Cell
         MainActivity.getGameLogic().setShip(96, 5, Ship.ShipDirection.UP, false);
         MainActivity.getGameLogic().setShip(108, 5, Ship.ShipDirection.UP, false);
         MainActivity.getGameLogic().setShip(120, 5, Ship.ShipDirection.UP, false);
-        //setShipsOnDesk(playerDesk);
+        setShipsOnDesk(playerDesk);
     }
 
     @Override
@@ -147,10 +156,9 @@ public class GameFragment extends Fragment implements View.OnClickListener, Cell
     @Override
     public void onCellTouch(View v, MotionEvent event)
     {
+        ((TextView)view.findViewById(R.id.textView_selected_cell)).setText( ((Cell)v).getCordString(((Cell) v).getIntTag()) );
         if (!playerDesk)
         {
-            ((TextView)view.findViewById(R.id.textView_selected_cell)).setText( ((Cell)v).getCordString(((Cell) v).getIntTag()) + "(" + v.getTag() + ")" );
-
             if (selectedCell != null)
             {
                 selectedCell.setType(Cell.CellType.EMPTY);
@@ -172,7 +180,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Cell
         switch (v.getId())
         {
             case R.id.button_capitulate:
-                Log.d(TAG, "onClick: capitulate");
+                //Log.d(TAG, "onClick: capitulate");
                 break;
             case R.id.button_fire:
                 Log.d(TAG, "onClick: fire");
@@ -184,6 +192,30 @@ public class GameFragment extends Fragment implements View.OnClickListener, Cell
                     {
                         case EMPTY:
                             selectedCell.setPartNum(result.getNumArg1());
+                            selectedCell.setPlayersField(false);
+                            Log.d(TAG, "onClick: EMPTY");
+                            lastEnemyStep = MainActivity.getGameLogic().switchTurn();
+                            if (lastEnemyStep.getNumArg2() > 0)
+                            {
+                                switch (lastEnemyStep.getResult())
+                                {
+                                    case EMPTY:
+                                        Toast.makeText(getContext(), "Ход противника: " + selectedCell.getCordString(lastEnemyStep.getNumArg2()) + " - Мимо" , Toast.LENGTH_SHORT).show();
+                                        break;
+                                    case MINE:
+                                        Toast.makeText(getContext(), "Ход противника: " + selectedCell.getCordString(lastEnemyStep.getNumArg2()) + " - Мина", Toast.LENGTH_SHORT).show();
+                                        break;
+                                    case SHIP_PART:
+                                        Toast.makeText(getContext(), "Ход противника: " + selectedCell.getCordString(lastEnemyStep.getNumArg2()) + " - Попадание" , Toast.LENGTH_SHORT).show();
+                                        break;
+                                    case SHIP_DESTROY:
+                                        Toast.makeText(getContext(), "Ход противника: " + selectedCell.getCordString(lastEnemyStep.getNumArg2()) + " - Уничтожен" , Toast.LENGTH_SHORT).show();
+                                        break;
+                                    case ENEMY_WIN:
+                                        endGame(false);
+                                        break;
+                                }
+                            }
                             break;
                         case SHIP_PART:
                             selectedCell.setPartNum(result.getNumArg1());
@@ -192,9 +224,26 @@ public class GameFragment extends Fragment implements View.OnClickListener, Cell
                         case SHIP_DESTROY:
                             selectedCell.setPartNum(result.getNumArg1());
                             selectedCell.setDestroyed(true);
+                            if (MainActivity.getGameLogic().winCheck(true))
+                            {
+                                endGame(true);
+                            }
                             break;
                         case MINE:
                             selectedCell.setDestroyed(true);
+                            Log.d(TAG, "onClick: MINE");
+                            lastEnemyStep = MainActivity.getGameLogic().switchTurn();
+                            if (lastEnemyStep.getNumArg2() > 0)
+                            {
+                                if (lastEnemyStep.getType() == Cell.CellType.EMPTY)
+                                {
+                                    Toast.makeText(getContext(), "Ход противника: " + selectedCell.getCordString(lastEnemyStep.getNumArg2()) + " - Мимо" , Toast.LENGTH_SHORT).show();
+                                }
+                                else if (lastEnemyStep.getType() == Cell.CellType.MINE)
+                                    Toast.makeText(getContext(), "Ход противника: " + selectedCell.getCordString(lastEnemyStep.getNumArg2()) + " - Мина", Toast.LENGTH_SHORT).show();
+                                else
+                                    Toast.makeText(getContext(), "Ход противника: " + selectedCell.getCordString(lastEnemyStep.getNumArg2()) + " - Попадание" , Toast.LENGTH_SHORT).show();
+                            }
                             break;
                         default:
                             break;
@@ -203,7 +252,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Cell
                 }
                 break;
             case R.id.button_switch_field:
-                Log.d(TAG, "onClick: switch field");
+                //Log.d(TAG, "onClick: switch field");
                 playerDesk = !playerDesk;
                 setShipsOnDesk(playerDesk);
                 if (playerDesk)
@@ -223,6 +272,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Cell
     public interface OnGameFragmentInteractionListener
     {
         void onFragmentInteraction(Uri uri);
+        void onGameEnd();
 
     }
 
@@ -239,7 +289,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Cell
         }
         if(results.length != 0)
         {
-            Log.d(TAG, "setShipsOnDesk true");
+            //Log.d(TAG, "setShipsOnDesk true");
             Cell cell = null;
             for (ShootResult result : results)
             {
@@ -271,5 +321,24 @@ public class GameFragment extends Fragment implements View.OnClickListener, Cell
         {
             Log.d(TAG, "setShipsOnDesk false");
         }
+    }
+
+    void endGame(boolean playerWin)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                listener.onGameEnd();
+            }
+        });
+        builder.setTitle(R.string.game_end);
+        if (playerWin)
+            builder.setMessage(R.string.winner_message);
+        else
+            builder.setMessage(R.string.looser_message);
+        builder.setCancelable(false);
+        AlertDialog wimDialog = builder.create();
+        wimDialog.show();
     }
 }

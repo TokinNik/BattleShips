@@ -245,6 +245,13 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
     }
 
     @Override
+    public void onGameEnd()
+    {
+        setFragment(MainActivity.TAG);
+        gameLogic.clearAll();
+    }
+
+    @Override
     public boolean onTouchEvent(MotionEvent event)
     {
         if (currentFragment.equals(PreGameFragment.TAG))

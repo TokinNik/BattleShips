@@ -4,6 +4,8 @@ import android.util.Log;
 
 import com.tokovoynr.battleships.UI.PreGame.Cell;
 
+import java.util.Arrays;
+
 public class Ship
 {
     public enum ShipDirection
@@ -82,6 +84,18 @@ public class Ship
             return true;
         else
             return false;
+    }
+
+    public boolean isDestroy()
+    {
+        for (int i = 0; i < cells.length; i++)
+        {
+            if (cells[i] != 0)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void setDirection(ShipDirection direction) {

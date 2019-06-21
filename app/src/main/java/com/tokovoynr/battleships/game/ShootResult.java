@@ -13,7 +13,9 @@ public class ShootResult
         EMPTY,
         MINE,
         SHIP_PART,
-        SHIP_DESTROY;
+        SHIP_DESTROY,
+        ENEMY_WIN,
+        PLAYER_WIN
     }
     private ResultType result = ResultType.EMPTY;
     private Cell.CellType type = Cell.CellType.EMPTY;

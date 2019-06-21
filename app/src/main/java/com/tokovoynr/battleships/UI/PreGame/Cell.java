@@ -130,39 +130,46 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
         {
             case EMPTY:
                 Drawable img = getResources().getDrawable(R.drawable.cell);
-                switch (partNum)
+                if (playersField && partNum >= 0)
                 {
-                    case -1:
-                        break;
-                    case 0:
-                       img = getResources().getDrawable(R.drawable.cell_num_0);
-                        break;
-                    case 1:
-                        img = getResources().getDrawable(R.drawable.cell_num_1);
-                        break;
-                    case 2:
-                        img = getResources().getDrawable(R.drawable.cell_num_2);
-                        break;
-                    case 3:
-                        img = getResources().getDrawable(R.drawable.cell_num_3);
-                        break;
-                    case 4:
-                        img = getResources().getDrawable(R.drawable.cell_num_4);
-                        break;
-                    case 5:
-                        img = getResources().getDrawable(R.drawable.cell_num_5);
-                        break;
-                    case 6:
-                        img = getResources().getDrawable(R.drawable.cell_num_6);
-                        break;
-                    case 7:
-                        img = getResources().getDrawable(R.drawable.cell_num_7);
-                        break;
-                    case 8:
-                        img = getResources().getDrawable(R.drawable.cell_num_8);
-                        break;
-                    default:
-                        break;
+                    img = getResources().getDrawable(R.drawable.cell_dot);
+                }
+                else
+                {
+                    switch (partNum)
+                    {
+                        case -1:
+                            break;
+                        case 0:
+                            img = getResources().getDrawable(R.drawable.cell_num_0);
+                            break;
+                        case 1:
+                            img = getResources().getDrawable(R.drawable.cell_num_1);
+                            break;
+                        case 2:
+                            img = getResources().getDrawable(R.drawable.cell_num_2);
+                            break;
+                        case 3:
+                            img = getResources().getDrawable(R.drawable.cell_num_3);
+                            break;
+                        case 4:
+                            img = getResources().getDrawable(R.drawable.cell_num_4);
+                            break;
+                        case 5:
+                            img = getResources().getDrawable(R.drawable.cell_num_5);
+                            break;
+                        case 6:
+                            img = getResources().getDrawable(R.drawable.cell_num_6);
+                            break;
+                        case 7:
+                            img = getResources().getDrawable(R.drawable.cell_num_7);
+                            break;
+                        case 8:
+                            img = getResources().getDrawable(R.drawable.cell_num_8);
+                            break;
+                        default:
+                            break;
+                    }
                 }
                 setImageDrawable(img);
                 break;
@@ -170,7 +177,7 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
                 if (destroyed)
                 {
                     if (playersField)
-                        setImageDrawable(getResources().getDrawable(R.drawable.ship_1));
+                        setImageDrawable(getResources().getDrawable(R.drawable.ship_1_destroyed));
                     else
                         setImageDrawable(getResources().getDrawable(R.drawable.ship_destroyed));
                 }
@@ -189,10 +196,10 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
                         switch (partNum)
                         {
                             case 1:
-                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_head_up));
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_head_up_destroyed));
                                 break;
                             case 2:
-                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_stern_up));
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_stern_up_destroyed));
                                 break;
                             default:
                                 break;
@@ -225,13 +232,13 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
                         switch (partNum)
                         {
                             case 1:
-                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_head_up));
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_head_up_destroyed));
                                 break;
                             case 2:
-                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_mid_up));
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_mid_up_destroyed));
                                 break;
                             case 3:
-                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_stern_up));
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_stern_up_destroyed));
                                 break;
                             default:
                                 break;
@@ -268,16 +275,16 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
                         switch (partNum)
                         {
                             case 1:
-                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_head_up));
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_head_up_destroyed));
                                 break;
                             case 2:
-                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_mid_up));
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_mid_up_destroyed));
                                 break;
                             case 3:
-                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_mid_up));
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_mid_up_destroyed));
                                 break;
                             case 4:
-                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_stern_up));
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_stern_up_destroyed));
                                 break;
                             default:
                                 break;

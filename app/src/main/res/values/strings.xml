@@ -34,4 +34,8 @@
     <string name="fire">Огонь</string>
     <string name="switch_to_enemy_field">Переключить на поле противника</string>
     <string name="switch_to_your_field">Переключить на своё поле</string>
+    <string name="ok">OK</string>
+    <string name="game_end">Конец игры</string>
+    <string name="winner_message">Вы победили!</string>
+    <string name="looser_message">Вы проиграли</string>
 </resources>

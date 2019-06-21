@@ -85,6 +85,11 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
             TableLayout mainField = view.findViewById(R.id.main_field);
             mainField.setScaleX(0.9f);
             mainField.setScaleY(0.9f);
+
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(new ViewGroup.MarginLayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT));
+            ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) mainField.getLayoutParams();
+            lp.setMargins(mlp.leftMargin - 20, mlp.topMargin , 0, 0);
+            mainField.setLayoutParams(lp);//fixme only on my device!!!!!!
         }
 
         final RelativeLayout root = view.findViewById(R.id.relative_main);
@@ -282,7 +287,7 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
     {
         if (event.getActionMasked() == MotionEvent.ACTION_DOWN)
         {
-            ((TextView)view.findViewById(R.id.textView_selected_cell)).setText( ((Cell)v).getCordString(((Cell) v).getIntTag()) + "(" + v.getTag() + ")" );
+            ((TextView)view.findViewById(R.id.textView_selected_cell)).setText( ((Cell)v).getCordString(((Cell) v).getIntTag()) );
         }
 
         onTouch(v, event);

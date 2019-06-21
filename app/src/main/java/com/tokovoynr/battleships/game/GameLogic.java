@@ -9,6 +9,13 @@ import java.util.Arrays;
 
 public class GameLogic
 {
+
+    public enum GameMode
+    {
+        PvP,
+        PvE
+    }
+
     public static final String TAG = "GAME_LOGIC";
     private static final int MAX_SHIP_1_COUNT = 4;
     private static final int MAX_SHIP_2_COUNT = 3;
@@ -22,6 +29,8 @@ public class GameLogic
     private LogicCell[][] enemyCells = new LogicCell[12][12];
     private boolean playerTurn = true;
     private boolean minePause = false;
+    private Bot enemyBot = new Bot();
+    private GameMode gameMode = GameMode.PvE;
 
 
     public GameLogic()
@@ -98,11 +107,11 @@ public class GameLogic
                 {
                     case 1:
                         cell.setType(CellType.SHIP_1);
-                        cell.setShip(playerShips[i]);
+                        cell.setShip(ship);
                         cell.setPartNum(1);
                         cells = new int[]{anchorCell};
                         ship.setCells(cells);
-                        result = new ShootResult[]{new ShootResult(direction, CellType.SHIP_1,anchorCell, 1)};
+                        result = new ShootResult[]{new ShootResult(direction, CellType.SHIP_1, anchorCell, 1)};
                         break;
                     case 2:
                         switch (ship.getDirection())
@@ -422,26 +431,54 @@ public class GameLogic
         return new ShootResult[0];
     }
 
-    public void switchTurn()//Этап игры
+    public ShootResult switchTurn()//Этап игры
     {
         if(playerTurn)
         {
-            //Enemy.turn();
             playerTurn = false;
+
+            if(gameMode == GameMode.PvE)
+            {
+                int enemyStep = enemyBot.turn();
+                ShootResult result = shoot(enemyStep, true);
+
+                if (result.getResult() == ShootResult.ResultType.SHIP_DESTROY || result.getResult() == ShootResult.ResultType.SHIP_PART)
+                {
+                    if (!winCheck(false))
+                    {
+                        playerTurn = true;
+                        switchTurn();
+                    }
+                    else return new ShootResult(ShootResult.ResultType.ENEMY_WIN, CellType.ERR, 0, 0);
+                }
+
+                if(minePause)
+                {
+                    minePause = false;
+                    playerTurn = true;
+                    switchTurn();
+                }
+                else
+                {
+                    playerTurn = true;
+                }
+
+                return result;
+            }
+
         }
         else
         {
             if(minePause)
             {
                 minePause = false;
-                //Enemy.turn();
-                switchTurn();//вместо хода противника
             }
             else
             {
                 playerTurn = true;
             }
         }
+        return new ShootResult(ShootResult.ResultType.EMPTY, CellType.ERR, 0, 0);
     }
 
     public ShootResult shoot(int targetCell, boolean playerTurn)//Этап игры
@@ -462,66 +499,74 @@ public class GameLogic
         {
             case EMPTY:
                 int num = mathCountAroundCell(lc);
-                shootResult = new ShootResult(ShootResult.ResultType.EMPTY, CellType.EMPTY, num,0);
-                //switchTurn();
+                shootResult = new ShootResult(ShootResult.ResultType.EMPTY, CellType.EMPTY, num, targetCell);
                 break;
             case MINE:
-                minePause = true;
-                shootResult = new ShootResult(ShootResult.ResultType.MINE, type, 1,0);
+                minePause = !minePause;
+                shootResult = new ShootResult(ShootResult.ResultType.MINE, type, 1, targetCell);
                 lc.setDestroyed(true);
                 break;
             case SHIP_1:
-                if (minePause) minePause = false;
-                shootResult = new ShootResult(ShootResult.ResultType.SHIP_DESTROY, type, 1,0);
+                shootResult = new ShootResult(ShootResult.ResultType.SHIP_DESTROY, type, 1, targetCell);
+                lc.getShip().destroyPart(lc.getId());
                 lc.setDestroyed(true);
                 break;
             case SHIP_2:
-                if (minePause) minePause = false;
                 if(lc.getShip() != null)
                 {
                     if (lc.getShip().destroyPart(lc.getId()))
-                        shootResult = new ShootResult(ShootResult.ResultType.SHIP_DESTROY, type, lc.getPartNum(),0);
+                        shootResult = new ShootResult(ShootResult.ResultType.SHIP_DESTROY, type, lc.getPartNum(), targetCell);
                     else
-                        shootResult = new ShootResult(ShootResult.ResultType.SHIP_PART, type, lc.getPartNum(),0);
+                        shootResult = new ShootResult(ShootResult.ResultType.SHIP_PART, type, lc.getPartNum(), targetCell);
                     lc.setDestroyed(true);
                 }
                 else
-                    shootResult = new ShootResult(ShootResult.ResultType.EMPTY, CellType.ERR, 1,0);
+                    shootResult = new ShootResult(ShootResult.ResultType.EMPTY, CellType.ERR, 1, targetCell);
                 break;
             case SHIP_3:
-                if (minePause) minePause = false;
                 if(lc.getShip() != null)
                 {
                     if (lc.getShip().destroyPart(lc.getId()))
-                        shootResult = new ShootResult(ShootResult.ResultType.SHIP_DESTROY, type, lc.getPartNum(),0);
+                        shootResult = new ShootResult(ShootResult.ResultType.SHIP_DESTROY, type, lc.getPartNum(), targetCell);
                     else
-                        shootResult = new ShootResult(ShootResult.ResultType.SHIP_PART, type, lc.getPartNum(),0);
+                        shootResult = new ShootResult(ShootResult.ResultType.SHIP_PART, type, lc.getPartNum(), targetCell);
                     lc.setDestroyed(true);
                 }
                 else
-                    shootResult = new ShootResult(ShootResult.ResultType.EMPTY, CellType.ERR, 1,0);
+                    shootResult = new ShootResult(ShootResult.ResultType.EMPTY, CellType.ERR, 1, targetCell);
                 break;
             case SHIP_4:
-                if (minePause) minePause = false;
                 if(lc.getShip() != null)
                 {
                     if (lc.getShip().destroyPart(lc.getId()))
-                        shootResult = new ShootResult(ShootResult.ResultType.SHIP_DESTROY, type, lc.getPartNum(),0);
+                        shootResult = new ShootResult(ShootResult.ResultType.SHIP_DESTROY, type, lc.getPartNum(), targetCell);
                     else
-                        shootResult = new ShootResult(ShootResult.ResultType.SHIP_PART, type, lc.getPartNum(),0);
+                        shootResult = new ShootResult(ShootResult.ResultType.SHIP_PART, type, lc.getPartNum(), targetCell);
                     lc.setDestroyed(true);
                 }
                 else
-                    shootResult = new ShootResult(ShootResult.ResultType.EMPTY, CellType.ERR, 1,0);
+                    shootResult = new ShootResult(ShootResult.ResultType.EMPTY, CellType.ERR, 1, targetCell);
                 break;
             case ERR:
-                shootResult = new ShootResult(ShootResult.ResultType.EMPTY, type, 0,0);
+                shootResult = new ShootResult(ShootResult.ResultType.EMPTY, type, 0, targetCell);
                 break;
             default:
-                shootResult = new ShootResult(ShootResult.ResultType.EMPTY, CellType.ERR, -1,0);
+                shootResult = new ShootResult(ShootResult.ResultType.EMPTY, CellType.ERR, -1, targetCell);
                 break;
         }
         return shootResult;
+    }
+
+    public boolean winCheck(boolean playerTurn)
+    {
+        for (int i = 0; i < MAX_SHIP_COUNT; i++)
+        {
+            if(!(playerTurn ? enemyShips[i].isDestroy() : playerShips[i].isDestroy()))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     private LogicCell findCell(int tag, boolean playerTurn)//Любой этап
@@ -699,14 +744,16 @@ public class GameLogic
                 enemyCells[i][j].clear();
             }
         }
-        for (int i = 0; i < 12; i++)
+        for (int i = 0; i < MAX_SHIP_COUNT + MAX_MINE_COUNT; i++)
         {
             playerShips[i].clear();
             enemyShips[i].clear();
         }
 
+        enemyBot.clear();
         minePause = false;
         playerTurn = true;
+
     }
 
     public void logAllFields()
@@ -787,6 +834,22 @@ public class GameLogic
         this.enemyShips = enemyShips;
     }
 
+    public Bot getEnemyBot() {
+        return enemyBot;
+    }
+
+    public void setEnemyBot(Bot enemyBot) {
+        this.enemyBot = enemyBot;
+    }
+
+    public GameMode getGameMode() {
+        return gameMode;
+    }
+
+    public void setGameMode(GameMode gameMode) {
+        this.gameMode = gameMode;
+    }
+
     public ShootResult[] getPlayerCells()
     {
         ShootResult[] result = new ShootResult[144];
@@ -816,4 +879,5 @@ public class GameLogic
         }
         return result;
     }
+
 }
