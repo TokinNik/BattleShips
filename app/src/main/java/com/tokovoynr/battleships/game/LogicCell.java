@@ -10,6 +10,7 @@ public class LogicCell
     private Cell.CellType type;
     private Ship ship;
     private int partNum = -1;
+    private  boolean destroyed = false;
 
     LogicCell(int id)
     {
@@ -63,5 +64,13 @@ public class LogicCell
 
     public void setPartNum(int partNum) {
         this.partNum = partNum;
+    }
+
+    public boolean isDestroyed() {
+        return destroyed;
+    }
+
+    public void setDestroyed(boolean destroyed) {
+        this.destroyed = destroyed;
     }
 }

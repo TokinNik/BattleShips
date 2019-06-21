@@ -468,10 +468,12 @@ public class GameLogic
             case MINE:
                 minePause = true;
                 shootResult = new ShootResult(ShootResult.ResultType.MINE, type, 1,0);
+                lc.setDestroyed(true);
                 break;
             case SHIP_1:
                 if (minePause) minePause = false;
                 shootResult = new ShootResult(ShootResult.ResultType.SHIP_DESTROY, type, 1,0);
+                lc.setDestroyed(true);
                 break;
             case SHIP_2:
                 if (minePause) minePause = false;
@@ -481,6 +483,7 @@ public class GameLogic
                         shootResult = new ShootResult(ShootResult.ResultType.SHIP_DESTROY, type, lc.getPartNum(),0);
                     else
                         shootResult = new ShootResult(ShootResult.ResultType.SHIP_PART, type, lc.getPartNum(),0);
+                    lc.setDestroyed(true);
                 }
                 else
                     shootResult = new ShootResult(ShootResult.ResultType.EMPTY, CellType.ERR, 1,0);
@@ -493,6 +496,7 @@ public class GameLogic
                         shootResult = new ShootResult(ShootResult.ResultType.SHIP_DESTROY, type, lc.getPartNum(),0);
                     else
                         shootResult = new ShootResult(ShootResult.ResultType.SHIP_PART, type, lc.getPartNum(),0);
+                    lc.setDestroyed(true);
                 }
                 else
                     shootResult = new ShootResult(ShootResult.ResultType.EMPTY, CellType.ERR, 1,0);
@@ -505,6 +509,7 @@ public class GameLogic
                         shootResult = new ShootResult(ShootResult.ResultType.SHIP_DESTROY, type, lc.getPartNum(),0);
                     else
                         shootResult = new ShootResult(ShootResult.ResultType.SHIP_PART, type, lc.getPartNum(),0);
+                    lc.setDestroyed(true);
                 }
                 else
                     shootResult = new ShootResult(ShootResult.ResultType.EMPTY, CellType.ERR, 1,0);
@@ -667,6 +672,7 @@ public class GameLogic
             }
         }
 
+        logicCell.setPartNum(num);
         return num;
     }
 
@@ -789,7 +795,7 @@ public class GameLogic
         {
             for (LogicCell cell: cells)
             {
-                result[i] = new ShootResult((cell.getShip() == null ? Ship.ShipDirection.UP : cell.getShip().getDirection()), cell.getType(), cell.getId(), cell.getPartNum());
+                result[i] = new ShootResult((cell.getShip() == null ? Ship.ShipDirection.UP : cell.getShip().getDirection()), cell.getType(), cell.getId(), cell.getPartNum(), cell.isDestroyed());
                 i++;
             }
         }
@@ -804,7 +810,7 @@ public class GameLogic
         {
             for (LogicCell cell: cells)
             {
-                result[i] = new ShootResult((cell.getShip() == null ? Ship.ShipDirection.UP : cell.getShip().getDirection()), cell.getType(), cell.getId(), cell.getPartNum());
+                result[i] = new ShootResult((cell.getShip() == null ? Ship.ShipDirection.UP : cell.getShip().getDirection()), cell.getType(), cell.getId(), cell.getPartNum(), cell.isDestroyed());
                 i++;
             }
         }

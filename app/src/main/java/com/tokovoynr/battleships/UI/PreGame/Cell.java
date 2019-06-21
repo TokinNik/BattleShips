@@ -37,7 +37,7 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
     private boolean playersField = true;
 
 
-    public Cell(Context context)
+    public Cell(Context context)//todo Cell - predok LogicCell i GraphicCell
     {
         super(context);
         setOnTouchListener(this);
@@ -49,13 +49,13 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
         setOnTouchListener(this);
     }
 
-    void clear()
+    public void clear()
     {
         type = CellType.EMPTY;
         direction = Ship.ShipDirection.UP;
         partNum = -1;
         destroyed = false;
-        changeCellState(null,null,0);
+        changeCellState(null,null,-1);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
         switch (event.getActionMasked())
         {
             case MotionEvent.ACTION_DOWN:
-                Log.d(TAG, "DOWN CELL " + getTag() + " " + type);
+                Log.d(TAG, "DOWN CELL " + getTag() + " " + type + "  player = " + playersField + " destr = " + destroyed);
                 if (type != CellType.ERR)
                 {
                     listener.onCellTouch(v, event);
@@ -168,75 +168,158 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
                 break;
             case SHIP_1:
                 if (destroyed)
-                    if(playersField)
+                {
+                    if (playersField)
                         setImageDrawable(getResources().getDrawable(R.drawable.ship_1));
                     else
-                        setImageDrawable(getResources().getDrawable(R.drawable.ship_1));
-                else if(playersField)
-                    setImageDrawable(getResources().getDrawable(R.drawable.ship_1));
+                        setImageDrawable(getResources().getDrawable(R.drawable.ship_destroyed));
+                }
                 else
-                    setImageDrawable(getResources().getDrawable(R.drawable.ship_1));
+                {
+                    if (playersField)
+                        setImageDrawable(getResources().getDrawable(R.drawable.ship_1));
+                    else
+                        setImageDrawable(getResources().getDrawable(R.drawable.cell));
+                }
                 break;
             case SHIP_2:
-                //TODO setRotation() вместо switch(direction) проверить
-                switch (partNum)
+                if (destroyed)
                 {
-                    case 1:
-                        setImageDrawable(getResources().getDrawable(R.drawable.ship_3_head_up));
-                        break;
-                    case 2:
-                        setImageDrawable(getResources().getDrawable(R.drawable.ship_3_stern_up));
-                        break;
-                    default:
-                        break;
+                    if (playersField)
+                        switch (partNum)
+                        {
+                            case 1:
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_head_up));
+                                break;
+                            case 2:
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_stern_up));
+                                break;
+                            default:
+                                break;
+                        }
+                    else
+                        setImageDrawable(getResources().getDrawable(R.drawable.ship_destroyed));
+                }
+                else
+                {
+                    if (playersField)
+                        switch (partNum)
+                        {
+                            case 1:
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_head_up));
+                                break;
+                            case 2:
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_stern_up));
+                                break;
+                            default:
+                                break;
+                        }
+                    else
+                        setImageDrawable(getResources().getDrawable(R.drawable.cell));
                 }
                 break;
             case SHIP_3:
-                switch (partNum)
+                if (destroyed)
                 {
-                    case 1:
-                        setImageDrawable(getResources().getDrawable(R.drawable.ship_3_head_up));
-                        break;
-                    case 2:
-                        setImageDrawable(getResources().getDrawable(R.drawable.ship_3_mid_up));
-                        break;
-                    case 3:
-                        setImageDrawable(getResources().getDrawable(R.drawable.ship_3_stern_up));
-                        break;
-                    default:
-                        break;
+                    if (playersField)
+                        switch (partNum)
+                        {
+                            case 1:
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_head_up));
+                                break;
+                            case 2:
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_mid_up));
+                                break;
+                            case 3:
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_stern_up));
+                                break;
+                            default:
+                                break;
+                        }
+                    else
+                        setImageDrawable(getResources().getDrawable(R.drawable.ship_destroyed));
+                }
+                else
+                {
+                    if (playersField)
+                        switch (partNum)
+                        {
+                            case 1:
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_head_up));
+                                break;
+                            case 2:
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_mid_up));
+                                break;
+                            case 3:
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_stern_up));
+                                break;
+                            default:
+                                break;
+                        }
+                    else
+                        setImageDrawable(getResources().getDrawable(R.drawable.cell));
+
                 }
                 break;
             case SHIP_4:
-                switch (partNum)
+                if (destroyed)
                 {
-                    case 1:
-                        setImageDrawable(getResources().getDrawable(R.drawable.ship_3_head_up));
-                        break;
-                    case 2:
-                        setImageDrawable(getResources().getDrawable(R.drawable.ship_3_mid_up));
-                        break;
-                    case 3:
-                        setImageDrawable(getResources().getDrawable(R.drawable.ship_3_mid_up));
-                        break;
-                    case 4:
-                        setImageDrawable(getResources().getDrawable(R.drawable.ship_3_stern_up));
-                        break;
-                    default:
-                        break;
+                    if (playersField)
+                        switch (partNum)
+                        {
+                            case 1:
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_head_up));
+                                break;
+                            case 2:
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_mid_up));
+                                break;
+                            case 3:
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_mid_up));
+                                break;
+                            case 4:
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_stern_up));
+                                break;
+                            default:
+                                break;
+                        }
+                    else
+                        setImageDrawable(getResources().getDrawable(R.drawable.ship_destroyed));
+                }
+                else
+                {
+                    if (playersField)
+                        switch (partNum)
+                        {
+                            case 1:
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_head_up));
+                                break;
+                            case 2:
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_mid_up));
+                                break;
+                            case 3:
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_mid_up));
+                                break;
+                            case 4:
+                                setImageDrawable(getResources().getDrawable(R.drawable.ship_3_stern_up));
+                                break;
+                            default:
+                                break;
+                        }
+                    else
+                        setImageDrawable(getResources().getDrawable(R.drawable.cell));
+
                 }
                 break;
             case MINE:
                 if (destroyed)
-                    if(playersField)
+                        setImageDrawable(getResources().getDrawable(R.drawable.mine_destroyed));
+                else
+                {
+                    if (playersField)
                         setImageDrawable(getResources().getDrawable(R.drawable.mine_active));
                     else
-                        setImageDrawable(getResources().getDrawable(R.drawable.mine_active));
-                else
-                if(playersField)
-                    setImageDrawable(getResources().getDrawable(R.drawable.mine_active));
-                else
-                    setImageDrawable(getResources().getDrawable(R.drawable.mine_active));
+                        setImageDrawable(getResources().getDrawable(R.drawable.cell));
+                }
                 break;
             case ERR:
                 if (this.type != CellType.EMPTY)

@@ -176,7 +176,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Cell
                 break;
             case R.id.button_fire:
                 Log.d(TAG, "onClick: fire");
-                if (selectedCell != null)
+                if (selectedCell != null && selectedCell.getType() == Cell.CellType.ERR)
                 {
                     ShootResult result = MainActivity.getGameLogic().shoot(selectedCell.getIntTag(), false);
                     selectedCell.setType(result.getType());
@@ -187,11 +187,14 @@ public class GameFragment extends Fragment implements View.OnClickListener, Cell
                             break;
                         case SHIP_PART:
                             selectedCell.setPartNum(result.getNumArg1());
+                            selectedCell.setDestroyed(true);
                             break;
                         case SHIP_DESTROY:
                             selectedCell.setPartNum(result.getNumArg1());
+                            selectedCell.setDestroyed(true);
                             break;
                         case MINE:
+                            selectedCell.setDestroyed(true);
                             break;
                         default:
                             break;
@@ -240,11 +243,28 @@ public class GameFragment extends Fragment implements View.OnClickListener, Cell
             Cell cell = null;
             for (ShootResult result : results)
             {
-
                 cell = view.findViewWithTag(String.valueOf(result.getNumArg1()));
-                cell.setType(result.getType());
-                cell.setPartNum(result.getNumArg2());
-                cell.setDirection(result.getDirection());
+                cell.setDestroyed(result.isBoolArg());
+                cell.setPlayersField(playerTurn);
+                if(playerTurn)
+                {
+                    cell.setType(result.getType());
+                    cell.setPartNum(result.getNumArg2());
+                    cell.setDirection(result.getDirection());
+                }
+                else
+                {
+                    if(result.getType() == Cell.CellType.EMPTY || result.isBoolArg())
+                    {
+                        cell.setType(result.getType());
+                        cell.setPartNum(result.getNumArg2());
+                        cell.setDirection(result.getDirection());
+                    }
+                    else
+                    {
+                        cell.clear();
+                    }
+                }
             }
         }
         else

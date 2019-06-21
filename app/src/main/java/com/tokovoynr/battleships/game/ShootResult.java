@@ -15,29 +15,49 @@ public class ShootResult
         SHIP_PART,
         SHIP_DESTROY;
     }
-    private ResultType result;
-    private Cell.CellType type;
-    private Ship.ShipDirection direction;
-    private int numArg1;
-    private int numArg2;
+    private ResultType result = ResultType.EMPTY;
+    private Cell.CellType type = Cell.CellType.EMPTY;
+    private Ship.ShipDirection direction = Ship.ShipDirection.UP;
+    private int numArg1 = 0;
+    private int numArg2 = 0;
+    private boolean boolArg = false;
 
     public ResultType getResult() {
         return result;
     }
 
-    public ShootResult(ResultType result, Cell.CellType type, int num1, int num2)
+    public ShootResult(ResultType result, Cell.CellType type, int numArg1, int numArg2)
     {
         this.result = result;
         this.type = type;
-        this.numArg1 = num1;
-        this.numArg2 = num2;
+        this.numArg1 = numArg1;
+        this.numArg2 = numArg2;
     }
-    public ShootResult(Ship.ShipDirection direction, Cell.CellType type, int num1, int num2)
+    public ShootResult(Ship.ShipDirection direction, Cell.CellType type, int numArg1, int numArg2)
     {
         this.type = type;
         this.direction = direction;
-        this.numArg1 = num1;
-        this.numArg2 = num2;
+        this.numArg1 = numArg1;
+        this.numArg2 = numArg2;
+    }
+
+    public ShootResult(Ship.ShipDirection direction, Cell.CellType type, int numArg1, int numArg2, boolean boolArg)
+    {
+        this.type = type;
+        this.direction = direction;
+        this.numArg1 = numArg1;
+        this.numArg2 = numArg2;
+        this.boolArg = boolArg;
+    }
+
+    public ShootResult(ResultType result, Cell.CellType type, Ship.ShipDirection direction, int numArg1, int numArg2, boolean boolArg)
+    {
+        this.result = result;
+        this.type = type;
+        this.direction = direction;
+        this.numArg1 = numArg1;
+        this.numArg2 = numArg2;
+        this.boolArg = boolArg;
     }
 
     public void setResult(ResultType result) {
@@ -74,5 +94,13 @@ public class ShootResult
 
     public void setDirection(Ship.ShipDirection direction) {
         this.direction = direction;
+    }
+
+    public boolean isBoolArg() {
+        return boolArg;
+    }
+
+    public void setBoolArg(boolean boolArg) {
+        this.boolArg = boolArg;
     }
 }
