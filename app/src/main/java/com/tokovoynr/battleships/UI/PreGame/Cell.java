@@ -25,8 +25,28 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
         SHIP_3,
         SHIP_4,
         MINE,
-        ERR
+        ERR;
 
+        public static CellType setOrdinal(int ordinal)
+        {
+            switch (ordinal)
+            {
+                case 0:
+                    return EMPTY;
+                case 1:
+                    return SHIP_1;
+                case 2:
+                    return SHIP_2;
+                case 3:
+                    return SHIP_3;
+                case 4:
+                    return SHIP_4;
+                case 5:
+                    return MINE;
+                default:
+                    return ERR;
+            }
+        }
     }
     public static final String TAG = "CELL_VIEW";
     private OnCellListener listener;
@@ -75,7 +95,7 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
         switch (event.getActionMasked())
         {
             case MotionEvent.ACTION_DOWN:
-                Log.d(TAG, "DOWN CELL " + getTag() + " " + type + "  player = " + playersField + " destr = " + destroyed);
+                Log.d(TAG, "DOWN CELL " + getTag() + " " + type + " part = " + partNum + "  player = " + playersField + " destr = " + destroyed);
                 if (type != CellType.ERR)
                 {
                     listener.onCellTouch(v, event);
@@ -343,47 +363,47 @@ public class Cell extends android.support.v7.widget.AppCompatImageView implement
         return type;
     }
 
-    public CharSequence getCordString(int id)
+    public static CharSequence getCordString(int id)
     {
         String coordinate = "";
         int x = id%12;
         switch (x)
         {
             case 1:
-                coordinate = getResources().getString(R.string.a);
+                coordinate = "A";
                 break;
             case 2:
-                coordinate = getResources().getString(R.string.b);
+                coordinate = "Б";
                 break;
             case 3:
-                coordinate = getResources().getString(R.string.v);
+                coordinate = "В";
                 break;
             case 4:
-                coordinate = getResources().getString(R.string.g);
+                coordinate = "Г";
                 break;
             case 5:
-                coordinate = getResources().getString(R.string.d);
+                coordinate = "Д";
                 break;
             case 6:
-                coordinate = getResources().getString(R.string.e);
+                coordinate = "Е";
                 break;
             case 7:
-                coordinate = getResources().getString(R.string.j);
+                coordinate = "Ж";
                 break;
             case 8:
-                coordinate = getResources().getString(R.string.z);
+                coordinate = "З";
                 break;
             case 9:
-                coordinate = getResources().getString(R.string.i);
+                coordinate = "И";
                 break;
             case 10:
-                coordinate = getResources().getString(R.string.k);
+                coordinate = "К";
                 break;
             case 11:
-                coordinate = getResources().getString(R.string.l);
+                coordinate = "Л";
                 break;
             case 0:
-                coordinate = getResources().getString(R.string.m);
+                coordinate = "М";
                 break;
         }
 

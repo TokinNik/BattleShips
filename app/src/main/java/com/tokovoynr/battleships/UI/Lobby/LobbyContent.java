@@ -1,17 +1,20 @@
 package com.tokovoynr.battleships.UI.Lobby;
 
+import com.tokovoynr.battleships.UI.MainActivity;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Helper class for providing sample content for user interfaces created by
+ * Helper class for providing sample lobbyName for user interfaces created by
  * Android template wizards.
  * <p>
  * TODO: Replace all uses of this class before publishing your app.
  */
-public class LobbyContent {
+public class LobbyContent
+{
 
     /**
      * An array of sample (dummy) items.
@@ -28,6 +31,10 @@ public class LobbyContent {
     static
     {
         // Add some sample items.
+
+        resetItems();
+
+        /*
         addItem(new LobbyItem("123", "test1", "D test1"));
         addItem(new LobbyItem("234", "test2", "D test2"));
         addItem(new LobbyItem("345", "test3", "D test3"));
@@ -42,18 +49,37 @@ public class LobbyContent {
         addItem(new LobbyItem("63345", "test11", "D test11"));
         addItem(new LobbyItem("67385", "test12", "D test12"));
         addItem(new LobbyItem("92565", "test13", "D test13"));
+        */
     }
 
-    private static void addItem(LobbyItem item) {
+    private static void addItem(LobbyItem item)
+    {
         ITEMS.add(item);
-        ITEM_MAP.put(item.id, item);
+        ITEM_MAP.put(item.reit, item);
     }
 
-    private static LobbyItem createDummyItem(int position) {
+    public static void resetItems()
+    {
+        if (ITEMS.size() > 0)
+            ITEMS.clear();
+        if(MainActivity.getConnection().testConnection())
+        {
+            String[] lobbyItems = MainActivity.getConnection().getLobby();
+            for(int i = 0; i < lobbyItems.length; i++)
+            {
+                LobbyItem item = new LobbyItem("0", lobbyItems[i].trim(), "test");
+                addItem(item);
+            }
+        }
+    }
+
+    private static LobbyItem createDummyItem(int position)
+    {
         return new LobbyItem(String.valueOf(position), "Item " + position, makeDetails(position));
     }
 
-    private static String makeDetails(int position) {
+    private static String makeDetails(int position)
+    {
         StringBuilder builder = new StringBuilder();
         builder.append("Details about Item: ").append(position);
         for (int i = 0; i < position; i++)
@@ -64,22 +90,24 @@ public class LobbyContent {
     }
 
     /**
-     * A dummy item representing a piece of content.
+     * A dummy item representing a piece of lobbyName.
      */
-    public static class LobbyItem {
-        public final String id;
-        public final String content;
+    public static class LobbyItem
+    {
+        public final String reit;
+        public final String lobbyName;
         public final String details;
 
-        public LobbyItem(String id, String content, String details) {
-            this.id = id;
-            this.content = content;
+        public LobbyItem(String reit, String content, String details)
+        {
+            this.reit = reit;
+            this.lobbyName = content;
             this.details = details;
         }
 
         @Override
         public String toString() {
-            return content;
+            return lobbyName;
         }
     }
 }

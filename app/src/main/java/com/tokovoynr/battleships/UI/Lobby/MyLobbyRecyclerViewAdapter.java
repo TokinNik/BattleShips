@@ -41,8 +41,8 @@ public class MyLobbyRecyclerViewAdapter extends RecyclerView.Adapter<MyLobbyRecy
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.lobbyItem = mValues.get(position);
-        holder.textView.setText(mValues.get(position).id);
-        holder.autofitTextView.setText(mValues.get(position).content);
+        holder.textView.setText(mValues.get(position).reit);
+        holder.autofitTextView.setText(mValues.get(position).lobbyName);
 
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override

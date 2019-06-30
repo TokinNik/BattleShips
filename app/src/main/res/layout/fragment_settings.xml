@@ -17,37 +17,36 @@
             android:text="@string/settings"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
-        <Button
-            android:id="@+id/button2"
+        <TextView
+            android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Button"
-            android:onClick="onClick"
-            tools:ignore="OnClick" />
+            android:paddingLeft="10dp"
+            android:text="@string/user_nikname" />
 
-        <Button
-            android:id="@+id/button3"
+        <EditText
+            android:id="@+id/editText_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Button" />
-
-        <Button
-            android:id="@+id/button4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Button" />
+            android:ems="10"
+            android:hint="@string/enter_nikname"
+            android:inputType="textPersonName" />
 
         <Switch
-            android:id="@+id/switch1"
+            android:id="@+id/switch_sound"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Switch" />
+            android:layout_marginTop="20dp"
+            android:paddingLeft="10dp"
+            android:text="@string/sound" />
 
         <Switch
-            android:id="@+id/switch2"
+            android:id="@+id/switch_music"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Switch" />
+            android:layout_marginTop="10dp"
+            android:paddingLeft="10dp"
+            android:text="@string/music" />
     </LinearLayout>
 
 </FrameLayout>

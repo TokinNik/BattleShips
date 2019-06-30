@@ -22,10 +22,10 @@ public class QueryQueue {
         this.queue = queue;
         this.profile = profile;
 
-        ADD_TEMPLATE =       "{method: add, params: [user_id: " + profile.getId() + "], id: %d}";
-        DELETE_TEMPLATE = "{method: delete, params: [user_id: " + profile.getId() + "],id: %d}";
-        SELECT_TEMPLATE = "{method: select, params: [user_id: " + profile.getId() + ", target_id: %d], id: %d}";
-        UPDATE_TEMPLATE = "{method: update, params: [user_id: " + profile.getId() + "],id: %d}";
+        ADD_TEMPLATE =       "{method: add, params: [user_id: " + profile.getId() + "], reit: %d}";
+        DELETE_TEMPLATE = "{method: delete, params: [user_id: " + profile.getId() + "],reit: %d}";
+        SELECT_TEMPLATE = "{method: select, params: [user_id: " + profile.getId() + ", target_id: %d], reit: %d}";
+        UPDATE_TEMPLATE = "{method: update, params: [user_id: " + profile.getId() + "],reit: %d}";
     }
 
     public Result add() {

@@ -5,14 +5,19 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.tokovoynr.battleships.R;
 
@@ -53,6 +58,22 @@ public class SettingsFragment extends Fragment
     {
         view = inflater.inflate(R.layout.fragment_settings, container, false);
 
+        ((EditText)view.findViewById(R.id.editText_name)).setText(MainActivity.getProfile().getName());
+        ((EditText)view.findViewById(R.id.editText_name)).addTextChangedListener(new TextWatcher(){
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+                MainActivity.getProfile().setName(((EditText)view.findViewById(R.id.editText_name)).getText().toString());
+            }
+        });
         return view;
     }
 

@@ -57,7 +57,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:singleLine="true"
-                    android:text="Long_Nik_1234567890"
+                    android:text="NikName"
                     android:textAllCaps="false"
                     app:fontFamily="serif" />
 
@@ -72,7 +72,7 @@
         </LinearLayout>
 
         <fragment
-            android:id="@+id/fragment"
+            android:id="@+id/fragment_lobby_list"
             android:name="com.tokovoynr.battleships.UI.Lobby.ListFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -87,12 +87,9 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/button_room_settings"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
                 android:layout_weight="1"
                 android:text="@string/lobby_settings" />
 
@@ -100,9 +97,6 @@
                 android:id="@+id/button_new_lobby"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
                 android:layout_weight="1"
                 android:text="@string/add_new_lobby" />
 

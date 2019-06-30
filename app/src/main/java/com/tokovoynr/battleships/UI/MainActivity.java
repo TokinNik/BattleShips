@@ -1,5 +1,7 @@
 package com.tokovoynr.battleships.UI;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,13 +16,16 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
+import android.widget.Toast;
 
+import com.tokovoynr.battleships.Profile;
 import com.tokovoynr.battleships.R;
 import com.tokovoynr.battleships.UI.Lobby.ListFragment;
 import com.tokovoynr.battleships.UI.Lobby.LobbyContent;
 import com.tokovoynr.battleships.UI.Lobby.LobbyFragment;
 import com.tokovoynr.battleships.UI.PreGame.PreGameFragment;
 import com.tokovoynr.battleships.game.GameLogic;
+import com.tokovoynr.battleships.network.TestConnection;
 
 public class MainActivity extends AppCompatActivity implements SettingsFragment.OnSettingsFragmentInteractionListener,
         ListFragment.OnListFragmentInteractionListener,
@@ -37,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
     private FragmentManager fragmentManager;
     private LinearLayout mainLayout;
     private ScaleGestureDetector scaleDetector;
+    private static TestConnection connection = new TestConnection();
+    private static Profile profile = new Profile(1, "Name", new int[]{1}, 1, new int[]{1}, 1, 1);
 
 
     @Override
@@ -50,7 +57,8 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
         currentFragment = TAG;
         scaleDetector = new ScaleGestureDetector(this, new ScaleListener());
 
-        gameLogic = new GameLogic();
+        gameLogic = new GameLogic(this);
+        gameLogic.setConnector(connection);
 
     }
 
@@ -71,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
                 setFragment(LobbyFragment.TAG);
                 break;
             case R.id.button_one_app_game:
+                gameLogic.setGameMode(GameLogic.GameMode.PvE);
                 setFragment(PreGameFragment.TAG);
                 break;
             case R.id.button_settings2://TODO удалить после тестов
@@ -104,12 +113,30 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
                 Log.d(TAG, "set fragment " + tag);
                 break;
             case LobbyFragment.TAG:
-                fragment = new LobbyFragment();
-                fragmentManager.beginTransaction()
-                        .add(R.id.container, fragment, LobbyFragment.TAG)
-                        .commit();
-                mainLayout.setVisibility(View.INVISIBLE);
-                currentFragment = tag;
+                if (!connection.testConnection())
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+                    builder.setTitle(R.string.connection_lost);
+                    builder.setMessage(R.string.connection_lost_message);
+                    builder.setCancelable(false);
+                    AlertDialog wimDialog = builder.create();
+                    wimDialog.show();
+                }
+                else
+                {
+                    fragment = new LobbyFragment();
+                    fragmentManager.beginTransaction()
+                            .add(R.id.container, fragment, LobbyFragment.TAG)
+                            .commit();
+                    mainLayout.setVisibility(View.INVISIBLE);
+                    currentFragment = tag;
+                }
                 Log.d(TAG, "set fragment " + tag);
                 break;
             case PreGameFragment.TAG:
@@ -177,7 +204,29 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
             }
             else if (fragmentManager.findFragmentByTag(GameFragment.TAG) != null && fragmentManager.findFragmentByTag(GameFragment.TAG).isVisible())
             {
-                setFragment(LobbyFragment.TAG);
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        setFragment(MainActivity.TAG);
+                        gameLogic.clearAll();
+                    }
+                });
+                builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.setTitle(R.string.exit_error);
+                if(gameLogic.getGameMode() == GameLogic.GameMode.PvE)
+                    builder.setMessage(R.string.exit_error_pve);
+                else
+                    builder.setMessage(R.string.exit_error_pvp);
+                builder.setCancelable(false);
+                AlertDialog wimDialog = builder.create();
+                wimDialog.show();
+
                 Log.d(TAG, "back to fragment " + LobbyFragment.TAG);
             }
             else if (fragmentManager.findFragmentByTag(ShopFragment.TAG) != null && fragmentManager.findFragmentByTag(ShopFragment.TAG).isVisible())
@@ -193,19 +242,69 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
     }
 
     @Override
-    public void onListFragmentInteraction(LobbyContent.LobbyItem item) {
+    public void onListFragmentInteraction(LobbyContent.LobbyItem item)
+    {
 
     }
 
     @Override
     public void onListFragmentJoin(LobbyContent.LobbyItem item)
     {
-        setFragment(PreGameFragment.TAG);
+        if(connection.joinToLobby(item.lobbyName))
+        {
+            setFragment(PreGameFragment.TAG);
+            gameLogic.setGameMode(GameLogic.GameMode.PvP);
+        }
+        else
+        {
+            Toast.makeText(this,R.string.lobby_owerflow, Toast.LENGTH_SHORT).show();
+            //((ListFragment)fragmentManager.findFragmentById(R.id.fragment_lobby_list)).resetListItems();
+        }
+
     }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void onLobbyClick(View view)
+    {
+        switch (view.getId())
+        {
+            case R.id.button_room_settings:
+                //gameLogic.getConnector().executeGet("123 test 321");
+                break;
+            case R.id.button_new_lobby:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        connection.createLobby();
+                        gameLogic.setGameMode(GameLogic.GameMode.PvP);
+                        setFragment(PreGameFragment.TAG);
+                        dialog.cancel();
+                    }
+                });
+                builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.setTitle(R.string.create_lobby_question);
+                builder.setMessage(R.string.create_lobby_message);
+                builder.setCancelable(false);
+                AlertDialog wimDialog = builder.create();
+                wimDialog.show();
+                break;
+            default:
+                break;
+
+        }
     }
 
     @Override
@@ -228,13 +327,44 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
         }
 
     }
+
+    @Override
+    public void onWaitCancel()
+    {
+        connection.closeLobby();
+        setFragment(LobbyFragment.TAG);
+    }
+
     @Override
     public void onPreGameClick(View view)
     {
         switch (view.getId())
         {
             case R.id.button_ready:
-                setFragment(GameFragment.TAG);
+                if (gameLogic.getGameMode() == GameLogic.GameMode.PvP)
+                {
+                    connection.readyToPlay();
+
+                    while(true)
+                    {
+                        try
+                        {
+                            Thread.sleep(2000);
+                        } catch (InterruptedException e)
+                        {
+                            e.printStackTrace();
+                        }
+                        if(connection.checkEnemyReady())
+                        {
+                            gameLogic.setPlayerTurn(connection.getQueue());
+                            Toast.makeText(this, (gameLogic.isPlayerTurn()? "true" : "false"), Toast.LENGTH_SHORT).show();
+                            setFragment(GameFragment.TAG);
+                            return;
+                        }
+                    }
+                }
+                else
+                    setFragment(GameFragment.TAG);
                 break;
             case R.id.button_exit:
                 setFragment(MainActivity.TAG);
@@ -245,8 +375,16 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
     }
 
     @Override
-    public void onGameEnd()
+    public void onGameEnd(boolean playerWin)
     {
+        if (playerWin)
+        {
+            profile.setRating(profile.getRating() + 1);
+        }
+        else if (profile.getRating() != 1)
+        {
+            profile.setRating(profile.getRating() - 1);
+        }
         setFragment(MainActivity.TAG);
         gameLogic.clearAll();
     }
@@ -306,5 +444,13 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
 
     public static GameLogic getGameLogic() {
         return gameLogic;
+    }
+
+    public static TestConnection getConnection() {
+        return connection;
+    }
+
+    public static Profile getProfile() {
+        return profile;
     }
 }

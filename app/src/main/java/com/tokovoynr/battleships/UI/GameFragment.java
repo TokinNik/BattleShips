@@ -14,6 +14,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -21,8 +23,12 @@ import android.widget.Toast;
 
 import com.tokovoynr.battleships.R;
 import com.tokovoynr.battleships.UI.PreGame.Cell;
+import com.tokovoynr.battleships.game.Bot;
+import com.tokovoynr.battleships.game.GameLogic;
 import com.tokovoynr.battleships.game.Ship;
 import com.tokovoynr.battleships.game.ShootResult;
+
+import java.util.EmptyStackException;
 
 
 public class GameFragment extends Fragment implements View.OnClickListener, Cell.OnCellListener
@@ -35,6 +41,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Cell
     private boolean playerDesk = false;
     private ShootResult lastEnemyStep;
     private GameFragment.OnGameFragmentInteractionListener listener;
+    private int stepCount = 0;
 
     public GameFragment()
     {
@@ -84,6 +91,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Cell
         root.findViewById(R.id.button_fire).setOnClickListener(this);
         root.findViewById(R.id.button_capitulate).setOnClickListener(this);
         root.findViewById(R.id.button_switch_field).setOnClickListener(this);
+        root.findViewById(R.id.button_game_log).setOnClickListener(this);
 
         return view;
     }
@@ -123,27 +131,80 @@ public class GameFragment extends Fragment implements View.OnClickListener, Cell
         {
             ((Cell)view.findViewWithTag(String.valueOf(i))).setListener(this);
         }
-        MainActivity.getGameLogic().setShip(1, 1, Ship.ShipDirection.UP, false);
-        MainActivity.getGameLogic().setShip(3, 1, Ship.ShipDirection.UP, false);
-        MainActivity.getGameLogic().setShip(5, 1, Ship.ShipDirection.UP, false);
-        MainActivity.getGameLogic().setShip(7, 1, Ship.ShipDirection.UP, false);
-        MainActivity.getGameLogic().setShip(38, 2, Ship.ShipDirection.UP, false);
-        MainActivity.getGameLogic().setShip(40, 2, Ship.ShipDirection.UP, false);
-        MainActivity.getGameLogic().setShip(42, 2, Ship.ShipDirection.UP, false);
-        MainActivity.getGameLogic().setShip(122, 3, Ship.ShipDirection.UP, false);
-        MainActivity.getGameLogic().setShip(124, 3, Ship.ShipDirection.UP, false);
-        MainActivity.getGameLogic().setShip(95, 4, Ship.ShipDirection.UP, false);
-        MainActivity.getGameLogic().setShip(12, 5, Ship.ShipDirection.UP, false);
-        MainActivity.getGameLogic().setShip(24, 5, Ship.ShipDirection.UP, false);
-        MainActivity.getGameLogic().setShip(36, 5, Ship.ShipDirection.UP, false);
-        MainActivity.getGameLogic().setShip(48, 5, Ship.ShipDirection.UP, false);
-        MainActivity.getGameLogic().setShip(60, 5, Ship.ShipDirection.UP, false);
-        MainActivity.getGameLogic().setShip(72, 5, Ship.ShipDirection.UP, false);
-        MainActivity.getGameLogic().setShip(84, 5, Ship.ShipDirection.UP, false);
-        MainActivity.getGameLogic().setShip(96, 5, Ship.ShipDirection.UP, false);
-        MainActivity.getGameLogic().setShip(108, 5, Ship.ShipDirection.UP, false);
-        MainActivity.getGameLogic().setShip(120, 5, Ship.ShipDirection.UP, false);
+        if(MainActivity.getGameLogic().getGameMode() == GameLogic.GameMode.PvE)
+        {
+            MainActivity.getGameLogic().setShip(1, 1, Ship.ShipDirection.UP, false);
+            MainActivity.getGameLogic().setShip(3, 1, Ship.ShipDirection.UP, false);
+            MainActivity.getGameLogic().setShip(5, 1, Ship.ShipDirection.UP, false);
+            MainActivity.getGameLogic().setShip(7, 1, Ship.ShipDirection.UP, false);
+            MainActivity.getGameLogic().setShip(38, 2, Ship.ShipDirection.UP, false);
+            MainActivity.getGameLogic().setShip(40, 2, Ship.ShipDirection.UP, false);
+            MainActivity.getGameLogic().setShip(42, 2, Ship.ShipDirection.UP, false);
+            MainActivity.getGameLogic().setShip(122, 3, Ship.ShipDirection.UP, false);
+            MainActivity.getGameLogic().setShip(124, 3, Ship.ShipDirection.UP, false);
+            MainActivity.getGameLogic().setShip(95, 4, Ship.ShipDirection.UP, false);
+            MainActivity.getGameLogic().setShip(12, 5, Ship.ShipDirection.UP, false);
+            MainActivity.getGameLogic().setShip(24, 5, Ship.ShipDirection.UP, false);
+            MainActivity.getGameLogic().setShip(36, 5, Ship.ShipDirection.UP, false);
+            MainActivity.getGameLogic().setShip(48, 5, Ship.ShipDirection.UP, false);
+            MainActivity.getGameLogic().setShip(60, 5, Ship.ShipDirection.UP, false);
+            MainActivity.getGameLogic().setShip(72, 5, Ship.ShipDirection.UP, false);
+            MainActivity.getGameLogic().setShip(84, 5, Ship.ShipDirection.UP, false);
+            MainActivity.getGameLogic().setShip(96, 5, Ship.ShipDirection.UP, false);
+            MainActivity.getGameLogic().setShip(108, 5, Ship.ShipDirection.UP, false);
+            MainActivity.getGameLogic().setShip(120, 5, Ship.ShipDirection.UP, false);
+
+            MainActivity.getGameLogic().setShip(133, 1, Ship.ShipDirection.UP, true);
+            MainActivity.getGameLogic().setShip(135, 1, Ship.ShipDirection.UP, true);
+            MainActivity.getGameLogic().setShip(137, 1, Ship.ShipDirection.UP, true);
+            MainActivity.getGameLogic().setShip(139, 1, Ship.ShipDirection.UP, true);
+            MainActivity.getGameLogic().setShip(101, 2, Ship.ShipDirection.UP, true);
+            MainActivity.getGameLogic().setShip(109, 2, Ship.ShipDirection.UP, true);
+            MainActivity.getGameLogic().setShip(111, 2, Ship.ShipDirection.UP, true);
+            MainActivity.getGameLogic().setShip(29, 3, Ship.ShipDirection.UP, true);
+            MainActivity.getGameLogic().setShip(103, 3, Ship.ShipDirection.UP, false);
+            MainActivity.getGameLogic().setShip(105, 4, Ship.ShipDirection.UP, true);
+            MainActivity.getGameLogic().setShip(106, 5, Ship.ShipDirection.UP, true);
+            MainActivity.getGameLogic().setShip(107, 5, Ship.ShipDirection.UP, true);
+            MainActivity.getGameLogic().setShip(108, 5, Ship.ShipDirection.UP, true);
+            MainActivity.getGameLogic().setShip(118, 5, Ship.ShipDirection.UP, true);
+            MainActivity.getGameLogic().setShip(119, 5, Ship.ShipDirection.UP, true);
+            MainActivity.getGameLogic().setShip(120, 5, Ship.ShipDirection.UP, true);
+            MainActivity.getGameLogic().setShip(130, 5, Ship.ShipDirection.UP, true);
+            MainActivity.getGameLogic().setShip(131, 5, Ship.ShipDirection.UP, true);
+            MainActivity.getGameLogic().setShip(4, 5, Ship.ShipDirection.UP, true);
+            MainActivity.getGameLogic().setShip(3, 5, Ship.ShipDirection.UP, true);
+
+        }
         setShipsOnDesk(playerDesk);
+
+        if (!MainActivity.getGameLogic().isPlayerTurn())
+        {
+            MainActivity.getGameLogic().setPlayerTurn(true);
+            lastEnemyStep = createWaitDialog();
+
+            if (lastEnemyStep.getNumArg2() > 0)
+            {
+                switch (lastEnemyStep.getResult())
+                {
+                    case EMPTY:
+                        Toast.makeText(getContext(), "Ход противника: " + selectedCell.getCordString(lastEnemyStep.getNumArg2()) + " - Мимо" , Toast.LENGTH_SHORT).show();
+                        break;
+                    case MINE:
+                        Toast.makeText(getContext(), "Ход противника: " + selectedCell.getCordString(lastEnemyStep.getNumArg2()) + " - Мина", Toast.LENGTH_SHORT).show();
+                        break;
+                    case SHIP_PART:
+                        Toast.makeText(getContext(), "Ход противника: " + selectedCell.getCordString(lastEnemyStep.getNumArg2()) + " - Попадание" , Toast.LENGTH_SHORT).show();
+                        break;
+                    case SHIP_DESTROY:
+                        Toast.makeText(getContext(), "Ход противника: " + selectedCell.getCordString(lastEnemyStep.getNumArg2()) + " - Уничтожен" , Toast.LENGTH_SHORT).show();
+                        break;
+                    case ENEMY_WIN:
+                        endGame(false, lastEnemyStep.getNumArg1());
+                        break;
+                }
+            }
+        }
     }
 
     @Override
@@ -180,10 +241,11 @@ public class GameFragment extends Fragment implements View.OnClickListener, Cell
         switch (v.getId())
         {
             case R.id.button_capitulate:
-                //Log.d(TAG, "onClick: capitulate");
+                MainActivity.getGameLogic().setEnemyBotLvL(Bot.BotMode.RANDOM);
                 break;
             case R.id.button_fire:
                 Log.d(TAG, "onClick: fire");
+                stepCount++;
                 if (selectedCell != null && selectedCell.getType() == Cell.CellType.ERR)
                 {
                     ShootResult result = MainActivity.getGameLogic().shoot(selectedCell.getIntTag(), false);
@@ -194,7 +256,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Cell
                             selectedCell.setPartNum(result.getNumArg1());
                             selectedCell.setPlayersField(false);
                             Log.d(TAG, "onClick: EMPTY");
-                            lastEnemyStep = MainActivity.getGameLogic().switchTurn();
+                            lastEnemyStep = createWaitDialog();
                             if (lastEnemyStep.getNumArg2() > 0)
                             {
                                 switch (lastEnemyStep.getResult())
@@ -212,7 +274,10 @@ public class GameFragment extends Fragment implements View.OnClickListener, Cell
                                         Toast.makeText(getContext(), "Ход противника: " + selectedCell.getCordString(lastEnemyStep.getNumArg2()) + " - Уничтожен" , Toast.LENGTH_SHORT).show();
                                         break;
                                     case ENEMY_WIN:
-                                        endGame(false);
+                                        endGame(false, lastEnemyStep.getNumArg1());
+                                        break;
+                                    case PLAYER_WIN:
+                                        endGame(true, stepCount);
                                         break;
                                 }
                             }
@@ -226,24 +291,37 @@ public class GameFragment extends Fragment implements View.OnClickListener, Cell
                             selectedCell.setDestroyed(true);
                             if (MainActivity.getGameLogic().winCheck(true))
                             {
-                                endGame(true);
+                                endGame(true, stepCount);
                             }
                             break;
                         case MINE:
                             selectedCell.setDestroyed(true);
                             Log.d(TAG, "onClick: MINE");
-                            lastEnemyStep = MainActivity.getGameLogic().switchTurn();
+                            lastEnemyStep = createWaitDialog();
                             if (lastEnemyStep.getNumArg2() > 0)
                             {
-                                if (lastEnemyStep.getType() == Cell.CellType.EMPTY)
+                                switch (lastEnemyStep.getResult())
                                 {
-                                    Toast.makeText(getContext(), "Ход противника: " + selectedCell.getCordString(lastEnemyStep.getNumArg2()) + " - Мимо" , Toast.LENGTH_SHORT).show();
+                                    case EMPTY:
+                                        Toast.makeText(getContext(), "Ход противника: " + selectedCell.getCordString(lastEnemyStep.getNumArg2()) + " - Мимо" , Toast.LENGTH_SHORT).show();
+                                        break;
+                                    case MINE:
+                                        Toast.makeText(getContext(), "Ход противника: " + selectedCell.getCordString(lastEnemyStep.getNumArg2()) + " - Мина", Toast.LENGTH_SHORT).show();
+                                        break;
+                                    case SHIP_PART:
+                                        Toast.makeText(getContext(), "Ход противника: " + selectedCell.getCordString(lastEnemyStep.getNumArg2()) + " - Попадание" , Toast.LENGTH_SHORT).show();
+                                        break;
+                                    case SHIP_DESTROY:
+                                        Toast.makeText(getContext(), "Ход противника: " + selectedCell.getCordString(lastEnemyStep.getNumArg2()) + " - Уничтожен" , Toast.LENGTH_SHORT).show();
+                                        break;
+                                    case ENEMY_WIN:
+                                        endGame(false, lastEnemyStep.getNumArg1());
+                                        break;
                                 }
-                                else if (lastEnemyStep.getType() == Cell.CellType.MINE)
-                                    Toast.makeText(getContext(), "Ход противника: " + selectedCell.getCordString(lastEnemyStep.getNumArg2()) + " - Мина", Toast.LENGTH_SHORT).show();
-                                else
-                                    Toast.makeText(getContext(), "Ход противника: " + selectedCell.getCordString(lastEnemyStep.getNumArg2()) + " - Попадание" , Toast.LENGTH_SHORT).show();
                             }
+                            break;
+                        case PLAYER_WIN:
+                            endGame(true, stepCount);
                             break;
                         default:
                             break;
@@ -264,6 +342,21 @@ public class GameFragment extends Fragment implements View.OnClickListener, Cell
                     ((Button) view.findViewById(R.id.button_switch_field)).setText(getResources().getText(R.string.switch_to_your_field));
                 }
                 break;
+            case R.id.button_game_log:
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        dialog.cancel();
+                    }
+                });
+                builder.setTitle(R.string.enemy_steps);
+                builder.setMessage(MainActivity.getGameLogic().getEnemyBot().getBotLog());
+                builder.setCancelable(true);
+                AlertDialog wimDialog = builder.create();
+                wimDialog.show();
+                break;
         }
     }
 
@@ -272,7 +365,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Cell
     public interface OnGameFragmentInteractionListener
     {
         void onFragmentInteraction(Uri uri);
-        void onGameEnd();
+        void onGameEnd(boolean winner);
 
     }
 
@@ -323,20 +416,39 @@ public class GameFragment extends Fragment implements View.OnClickListener, Cell
         }
     }
 
-    void endGame(boolean playerWin)
+    private ShootResult createWaitDialog()
+    {
+        ProgressBar progressBar = new ProgressBar(getContext());
+        progressBar.setLayoutParams(new LinearLayout.LayoutParams( LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(R.string.wait_enemy_turn);
+        builder.setMessage(R.string.wait_enemy_turn_message);
+        builder.setCancelable(true);
+        builder.setView(progressBar);
+        final AlertDialog wimDialog = builder.create();
+        wimDialog.show();
+
+        //MainActivity.getGameLogic().setPlayerTurn(true);
+        ShootResult result = MainActivity.getGameLogic().switchTurn();
+        wimDialog.cancel();
+        return result;
+    }
+
+    public void endGame(final boolean playerWin, int stepCount)
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                listener.onGameEnd();
+                listener.onGameEnd(playerWin);
             }
         });
-        builder.setTitle(R.string.game_end);
+        builder.setTitle(getResources().getString(R.string.game_end) + "\n Количество ходов - " + this.stepCount);
         if (playerWin)
-            builder.setMessage(R.string.winner_message);
+            builder.setMessage(getResources().getString(R.string.winner_message) + "\n Количество ходов - " + this.stepCount);
         else
-            builder.setMessage(R.string.looser_message);
+            builder.setMessage(getResources().getString(R.string.looser_message));
         builder.setCancelable(false);
         AlertDialog wimDialog = builder.create();
         wimDialog.show();

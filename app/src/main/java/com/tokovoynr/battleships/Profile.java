@@ -1,6 +1,9 @@
 package com.tokovoynr.battleships;
 
-public class Profile {
+import android.text.Editable;
+
+public class Profile
+{
     private int id;
     private String name;
     private int[] availableShipSets;
@@ -10,7 +13,8 @@ public class Profile {
     private int rating;
 
     public Profile(int id, String name, int[] availableShipSets,
-                   int currentSet, int[] availableAvatars, int currentAvatar, int rating) {
+                   int currentSet, int[] availableAvatars, int currentAvatar, int rating)
+    {
         this.id = id;
         this.name = name;
         this.availableShipSets = availableShipSets;
@@ -46,5 +50,13 @@ public class Profile {
 
     public int getRating() {
         return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -2,10 +2,6 @@ package com.tokovoynr.battleships.game;
 
 import android.util.Log;
 
-import com.tokovoynr.battleships.UI.PreGame.Cell;
-
-import java.util.Arrays;
-
 public class Ship
 {
     public enum ShipDirection
@@ -22,12 +18,21 @@ public class Ship
     private ShipDirection direction = ShipDirection.UP;;
     private int[] cells;
     private boolean onDesk = false;
+    private boolean destroyed = false;
+
+    public Ship(int deckCount)
+    {
+        this.deckCount = deckCount;
+        this.cells = new int[deckCount];
+    }
+
     public Ship(int deckCount, ShipDirection direction)
     {
         this.deckCount = deckCount;
         this.direction = direction;
         this.cells = new int[deckCount];
     }
+
     public Ship(int deckCount, int anchorCell, ShipDirection direction)
     {
         this.deckCount = deckCount;
@@ -67,23 +72,27 @@ public class Ship
     public boolean destroyPart(int id)
     {
         int num = 0;
+
+
         for (int i = 0; i < cells.length; i++)
         {
             if(cells[i] == id)
             {
                 cells[i] = 0;
-
             }
             if (cells[i] == 0)
             {
-                num++;
+                if(onDesk)
+                    num++;
+                else
+                {
+                    cells[i] = id;
+                    return false;
+                }
             }
         }
 
-        if(num == deckCount)
-            return true;
-        else
-            return false;
+        return num == deckCount;
     }
 
     public boolean isDestroy()
@@ -95,6 +104,7 @@ public class Ship
                 return false;
             }
         }
+        destroyed = true;
         return true;
     }
 
@@ -133,5 +143,13 @@ public class Ship
 
     public int[] getCells() {
         return cells;
+    }
+
+    public boolean isDestroyed() {
+        return destroyed;
+    }
+
+    public void setDestroyed(boolean destroyed) {
+        this.destroyed = destroyed;
     }
 }

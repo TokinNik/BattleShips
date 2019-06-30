@@ -1,15 +1,17 @@
 package com.tokovoynr.battleships.game;
 
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.tokovoynr.battleships.UI.GameFragment;
+import com.tokovoynr.battleships.UI.MainActivity;
 import com.tokovoynr.battleships.UI.PreGame.Cell;
 import com.tokovoynr.battleships.UI.PreGame.Cell.CellType;
-
-import java.util.Arrays;
+import com.tokovoynr.battleships.network.TestConnection;
 
 public class GameLogic
 {
-
     public enum GameMode
     {
         PvP,
@@ -17,24 +19,28 @@ public class GameLogic
     }
 
     public static final String TAG = "GAME_LOGIC";
-    private static final int MAX_SHIP_1_COUNT = 4;
-    private static final int MAX_SHIP_2_COUNT = 3;
-    private static final int MAX_SHIP_3_COUNT = 2;
-    private static final int MAX_SHIP_4_COUNT = 1;
-    private static final int MAX_MINE_COUNT = 10;
-    private static final int MAX_SHIP_COUNT = MAX_SHIP_1_COUNT + MAX_SHIP_2_COUNT + MAX_SHIP_3_COUNT + MAX_SHIP_4_COUNT;
+    public static final int MAX_SHIP_1_COUNT = 1;
+    public static final int MAX_SHIP_2_COUNT = 1;
+    public static final int MAX_SHIP_3_COUNT = 1;
+    public static final int MAX_SHIP_4_COUNT = 1;
+    public static final int MAX_MINE_COUNT = 0;
+    public static final int MAX_SHIP_COUNT = MAX_SHIP_1_COUNT + MAX_SHIP_2_COUNT + MAX_SHIP_3_COUNT + MAX_SHIP_4_COUNT;
     private Ship[] playerShips = new Ship[MAX_SHIP_COUNT + MAX_MINE_COUNT];
     private Ship[] enemyShips = new Ship[MAX_SHIP_COUNT + MAX_MINE_COUNT];
     private LogicCell[][] playerCells = new LogicCell[12][12];
     private LogicCell[][] enemyCells = new LogicCell[12][12];
     private boolean playerTurn = true;
     private boolean minePause = false;
-    private Bot enemyBot = new Bot();
-    private GameMode gameMode = GameMode.PvE;
+    private Bot enemyBot = new Bot(Bot.BotMode.EASY);
+    private GameMode gameMode = GameMode.PvP;
+    private TestConnection connector;
+    private AppCompatActivity mainActivity;
 
 
-    public GameLogic()
+    public GameLogic(AppCompatActivity activity)
     {
+        mainActivity = activity;
+
         int i = 0;
         for (;i < MAX_SHIP_1_COUNT; i++)
         {
@@ -267,7 +273,7 @@ public class GameLogic
                             case LEFT:
                                 if((anchorCell - 1)%12 > 0 && (anchorCell + 1)%12 > 1)
                                 {
-                                    cells = new int[]{anchorCell + 1, anchorCell, anchorCell - 1};
+                                    cells = new int[]{anchorCell - 1, anchorCell, anchorCell + 1};
                                     j = 1;
                                     for (int c: cells)
                                     {
@@ -316,7 +322,7 @@ public class GameLogic
                             case RIGHT:
                                 if((anchorCell - 1)%12 > 0 && (anchorCell + 2)%12 > 1)
                                 {
-                                    cells = new int[]{anchorCell + 1, anchorCell + 2, anchorCell, anchorCell - 1};
+                                    cells = new int[]{anchorCell + 2, anchorCell + 1, anchorCell, anchorCell - 1};
                                     for (int c: cells)
                                     {
                                         cell = findCell(c, playerTurn);
@@ -406,7 +412,7 @@ public class GameLogic
         }
         catch (NullPointerException c)
         {
-            Log.e(TAG, "LogicCell with id " + removeCell + " don't have ship");
+            Log.e(TAG, "LogicCell with reit " + removeCell + " don't have ship");
             return new ShootResult[0];
         }
         for (int i = 0; i < MAX_SHIP_COUNT + MAX_MINE_COUNT; i++)
@@ -436,35 +442,98 @@ public class GameLogic
         if(playerTurn)
         {
             playerTurn = false;
+            Log.d(TAG, "switchTurn: playerTurn true to false");
 
+            ShootResult result;
             if(gameMode == GameMode.PvE)
             {
                 int enemyStep = enemyBot.turn();
-                ShootResult result = shoot(enemyStep, true);
+                result = shoot(enemyStep, true);
+                enemyBot.receiver(result);
+            }
+            else//PvP
+            {
+                int enemyStep = 0;
+                while(true)
+                {
 
+                    enemyStep = connector.getEnemyTurn();//передаёт ход к противнику, получает ход противника (ожидание)
+
+                    if (enemyStep != 0)
+                    {
+                        break;
+                    }
+
+                    try
+                    {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+
+                result = shoot(enemyStep, true);//отмечает результат на локальных полях
+                Log.d(TAG, "switchTurn: " + result.convertToNum() + result.getResult() + " " + result.getType() + " " + result.getNumArg1() + " " + result.getNumArg2());
+                if (winCheck(false))
+                {
+                    result.setResult(ShootResult.ResultType.PLAYER_WIN);
+                    ((GameFragment)mainActivity.getSupportFragmentManager().findFragmentByTag(GameFragment.TAG)).endGame(false, 1);
+                }
+                connector.sendEnemyTurn(result.convertToNum());//отправляет результат высрела противнику, не передаёт ход
+            }
+/*
+                int overlapse = 1000;
+                while(overlapse > 0)
+                {
+                    enemyStep = enemyBot.fire();
+                    result = shoot(enemyStep, true);
+                    enemyBot.receiver(result);
+                    if (winCheck(false))
+                    {
+                        return new ShootResult(ShootResult.ResultType.ENEMY_WIN, CellType.ERR, enemyBot.getStepCount(), 0);
+                    }
+                    overlapse--;
+                    Log.d(TAG, "switchTurn: overlapse = " + overlapse);
+                }
+*/
+
+                ShootResult res = null;
                 if (result.getResult() == ShootResult.ResultType.SHIP_DESTROY || result.getResult() == ShootResult.ResultType.SHIP_PART)
                 {
                     if (!winCheck(false))
                     {
                         playerTurn = true;
+                        Log.d(TAG, "switchTurn: playerTurn1 foase to true");
                         switchTurn();
                     }
-                    else return new ShootResult(ShootResult.ResultType.ENEMY_WIN, CellType.ERR, 0, 0);
+                    else
+                    {
+                        ((GameFragment)mainActivity.getSupportFragmentManager().findFragmentByTag(GameFragment.TAG)).endGame(false, 1);
+                        //res = new ShootResult(ShootResult.ResultType.ENEMY_WIN, CellType.ERR, 0, 0);
+                    }
+                }
+
+                if (res != null)
+                {
+                    return  res;
                 }
 
                 if(minePause)
                 {
                     minePause = false;
                     playerTurn = true;
+                    Log.d(TAG, "switchTurn: playerTurn2 foase to true");
                     switchTurn();
                 }
                 else
                 {
                     playerTurn = true;
+                    Log.d(TAG, "switchTurn: playerTurn3 foase to true");
                 }
 
                 return result;
-            }
+
 
         }
         else
@@ -476,6 +545,7 @@ public class GameLogic
             else
             {
                 playerTurn = true;
+                Log.d(TAG, "switchTurn: playerTurn foase to true");
             }
         }
         return new ShootResult(ShootResult.ResultType.EMPTY, CellType.ERR, 0, 0);
@@ -483,65 +553,131 @@ public class GameLogic
 
     public ShootResult shoot(int targetCell, boolean playerTurn)//Этап игры
     {
-        ShootResult shootResult;
+        ShootResult shootResult = new ShootResult(ShootResult.ResultType.EMPTY, CellType.EMPTY, 7, 0);;
+        LogicCell lc = findCell(targetCell, playerTurn);
+        int num = 0;
         CellType type = CellType.ERR;
-        LogicCell lc = findCell(targetCell, playerTurn);;
-        try
+        if (gameMode == GameMode.PvP && this.playerTurn)
         {
-            type = lc.getType();
+            connector.fire(targetCell);
+
+            while(true)
+            {
+
+                num = connector.receiveEnemyTurn();//возврвщает резкльтат хода (спрашивает через сервер)
+                if (num != -1)
+                {
+                    shootResult = ShootResult.parseForNum(num);
+                    if (shootResult.getResult() == ShootResult.ResultType.SHIP_DESTROY || shootResult.getResult() == ShootResult.ResultType.SHIP_PART)
+                         this.playerTurn = false;
+                    if(num == -2)
+                        return shootResult;
+                    Log.d(TAG, "shoot: s " + shootResult.getResult() + " " + shootResult.getType() + " " + shootResult.getNumArg1() + " " + shootResult.getNumArg2());
+                   break;
+                }
+
+                try
+                {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+
+            type = shootResult.getType();
         }
-        catch (NullPointerException c)
+        else
         {
-            Log.d(TAG, "Can't find LogicCell with id " + targetCell);
-            return new ShootResult(ShootResult.ResultType.EMPTY, type, 0,0);
+            try
+            {
+                type = lc.getType();
+            } catch (NullPointerException c)
+            {
+                Log.d(TAG, "Can't find LogicCell with reit " + targetCell);
+                return new ShootResult(ShootResult.ResultType.EMPTY, type, 0, 0);
+            }
         }
+
+        Log.d(TAG, "shoot: type = " + type);
         switch(type)
         {
             case EMPTY:
-                int num = mathCountAroundCell(lc);
+                if (gameMode == GameMode.PvE || !this.playerTurn)
+                {
+                    num = mathCountAroundCell(lc);
+                    Log.d(TAG, "shoot: num = " + num);
+                }
                 shootResult = new ShootResult(ShootResult.ResultType.EMPTY, CellType.EMPTY, num, targetCell);
                 break;
             case MINE:
-                minePause = !minePause;
+                //minePause = !minePause;
                 shootResult = new ShootResult(ShootResult.ResultType.MINE, type, 1, targetCell);
+                if (gameMode == GameMode.PvP)
+                {
+                    setShip(targetCell, 5, Ship.ShipDirection.UP, playerTurn);
+                }
                 lc.setDestroyed(true);
                 break;
             case SHIP_1:
+                if (gameMode == GameMode.PvP)
+                {
+                    setShip(targetCell, 1, shootResult.getDirection(), playerTurn);
+                }
                 shootResult = new ShootResult(ShootResult.ResultType.SHIP_DESTROY, type, 1, targetCell);
                 lc.getShip().destroyPart(lc.getId());
+                lc.getShip().isDestroy();
                 lc.setDestroyed(true);
                 break;
             case SHIP_2:
+                if (gameMode == GameMode.PvP)
+                {
+                    setShip(targetCell, 2, shootResult.getDirection(), playerTurn);
+                }
                 if(lc.getShip() != null)
                 {
                     if (lc.getShip().destroyPart(lc.getId()))
                         shootResult = new ShootResult(ShootResult.ResultType.SHIP_DESTROY, type, lc.getPartNum(), targetCell);
                     else
                         shootResult = new ShootResult(ShootResult.ResultType.SHIP_PART, type, lc.getPartNum(), targetCell);
+                    lc.getShip().destroyPart(lc.getId());
+                    lc.getShip().isDestroy();
                     lc.setDestroyed(true);
                 }
                 else
                     shootResult = new ShootResult(ShootResult.ResultType.EMPTY, CellType.ERR, 1, targetCell);
                 break;
             case SHIP_3:
+                if (gameMode == GameMode.PvP)
+                {
+                    setShip(targetCell, 3, shootResult.getDirection(), playerTurn);
+                }
                 if(lc.getShip() != null)
                 {
                     if (lc.getShip().destroyPart(lc.getId()))
                         shootResult = new ShootResult(ShootResult.ResultType.SHIP_DESTROY, type, lc.getPartNum(), targetCell);
                     else
                         shootResult = new ShootResult(ShootResult.ResultType.SHIP_PART, type, lc.getPartNum(), targetCell);
+                    lc.getShip().destroyPart(lc.getId());
+                    lc.getShip().isDestroy();
                     lc.setDestroyed(true);
                 }
                 else
                     shootResult = new ShootResult(ShootResult.ResultType.EMPTY, CellType.ERR, 1, targetCell);
                 break;
             case SHIP_4:
+                if (gameMode == GameMode.PvP)
+                {
+                    setShip(targetCell, 4, shootResult.getDirection(), playerTurn);
+                }
                 if(lc.getShip() != null)
                 {
                     if (lc.getShip().destroyPart(lc.getId()))
                         shootResult = new ShootResult(ShootResult.ResultType.SHIP_DESTROY, type, lc.getPartNum(), targetCell);
                     else
                         shootResult = new ShootResult(ShootResult.ResultType.SHIP_PART, type, lc.getPartNum(), targetCell);
+                    lc.getShip().destroyPart(lc.getId());
+                    lc.getShip().isDestroy();
                     lc.setDestroyed(true);
                 }
                 else
@@ -561,8 +697,9 @@ public class GameLogic
     {
         for (int i = 0; i < MAX_SHIP_COUNT; i++)
         {
-            if(!(playerTurn ? enemyShips[i].isDestroy() : playerShips[i].isDestroy()))
+            if(!(playerTurn ? enemyShips[i].isDestroyed() : playerShips[i].isDestroyed()))
             {
+                Log.d(TAG, "winCheck: " + (playerTurn ? enemyShips[i].getAnchorCell() : playerShips[i].getAnchorCell()));
                 return false;
             }
         }
@@ -750,6 +887,7 @@ public class GameLogic
             enemyShips[i].clear();
         }
 
+        gameMode = GameMode.PvP;
         enemyBot.clear();
         minePause = false;
         playerTurn = true;
@@ -850,6 +988,23 @@ public class GameLogic
         this.gameMode = gameMode;
     }
 
+    public void setEnemyBotLvL(Bot.BotMode mode)
+    {
+        enemyBot.setMode(mode);
+    }
+
+    public void setConnector(TestConnection connector) {
+        this.connector = connector;
+    }
+
+    public void setPlayerTurn(boolean playerTurn) {
+        this.playerTurn = playerTurn;
+    }
+
+    public boolean isPlayerTurn() {
+        return playerTurn;
+    }
+
     public ShootResult[] getPlayerCells()
     {
         ShootResult[] result = new ShootResult[144];
@@ -873,7 +1028,8 @@ public class GameLogic
         {
             for (LogicCell cell: cells)
             {
-                result[i] = new ShootResult((cell.getShip() == null ? Ship.ShipDirection.UP : cell.getShip().getDirection()), cell.getType(), cell.getId(), cell.getPartNum(), cell.isDestroyed());
+                result[i] = new ShootResult((cell.getShip() == null ? Ship.ShipDirection.UP : cell.getShip().getDirection()),
+                        cell.getType(), cell.getId(), cell.getPartNum(), cell.isDestroyed());
                 i++;
             }
         }

@@ -1652,6 +1652,16 @@
 
 
         <Button
+            android:id="@+id/button_game_log"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:background="@color/BG_sea_color"
+            android:layout_marginBottom="5dp"
+            android:text="@string/steps" />
+
+        <Button
             android:id="@+id/button_switch_field"
             android:layout_width="wrap_content"
             android:layout_height="0dp"

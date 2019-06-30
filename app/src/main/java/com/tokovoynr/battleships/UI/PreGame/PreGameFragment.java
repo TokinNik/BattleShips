@@ -1,20 +1,25 @@
 package com.tokovoynr.battleships.UI.PreGame;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -22,10 +27,9 @@ import android.widget.Toast;
 
 import com.tokovoynr.battleships.R;
 import com.tokovoynr.battleships.UI.MainActivity;
+import com.tokovoynr.battleships.game.GameLogic;
 import com.tokovoynr.battleships.game.Ship;
 import com.tokovoynr.battleships.game.ShootResult;
-
-import java.util.ArrayList;
 
 
 public class PreGameFragment extends Fragment implements View.OnTouchListener, Cell.OnCellListener, View.OnClickListener
@@ -258,6 +262,11 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
         {
             ((Cell)view.findViewWithTag(String.valueOf(i))).setListener(this);
         }
+
+        if (MainActivity.getGameLogic().getGameMode() == GameLogic.GameMode.PvP)
+        {
+            createWaitDialog();
+        }
     }
 
     @Override
@@ -272,6 +281,8 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
         void onFragmentInteraction(Uri uri);
 
         void onPreGameClick(View view);
+
+        void onWaitCancel();
 
     }
 
@@ -630,6 +641,45 @@ public class PreGameFragment extends Fragment implements View.OnTouchListener, C
 
                 i = ((mid - 1) * 12) + 1;
                 //Log.d(TAG,"eY < cordY | left = " + left + " right = " + right + " mid = " + mid + " i = " + i + " cY = " + cord[1] + " size = " + size + " eY = " + eY);
+            }
+        }
+    }
+
+    private void createWaitDialog()
+    {
+        ProgressBar progressBar = new ProgressBar(getContext());
+        progressBar.setLayoutParams(new LinearLayout.LayoutParams( LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                listener.onWaitCancel();
+                dialog.cancel();
+            }
+        });
+        builder.setTitle(R.string.wait_other_player);
+        builder.setMessage(R.string.wait_other_player_message);
+        builder.setCancelable(false);
+        builder.setView(progressBar);
+        final AlertDialog wimDialog = builder.create();
+        wimDialog.show();
+
+        while(true)
+        {
+            try
+            {
+                Thread.sleep(2000);
+            } catch (InterruptedException e)
+            {
+                e.printStackTrace();
+            }
+            if (MainActivity.getConnection().readyLobby())
+            {
+                wimDialog.cancel();
+                return;
             }
         }
     }
