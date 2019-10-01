@@ -32,9 +32,9 @@ public class LobbyContent
     {
         // Add some sample items.
 
-        resetItems();
+        //resetItems();
 
-        /*
+
         addItem(new LobbyItem("123", "test1", "D test1"));
         addItem(new LobbyItem("234", "test2", "D test2"));
         addItem(new LobbyItem("345", "test3", "D test3"));
@@ -49,7 +49,7 @@ public class LobbyContent
         addItem(new LobbyItem("63345", "test11", "D test11"));
         addItem(new LobbyItem("67385", "test12", "D test12"));
         addItem(new LobbyItem("92565", "test13", "D test13"));
-        */
+
     }
 
     private static void addItem(LobbyItem item)

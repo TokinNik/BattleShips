@@ -38,7 +38,7 @@ public class TestConnection
             URL url = new URL(query);
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
-
+            connection.setConnectTimeout(4000);
             connection.setUseCaches(false);
             connection.setDoInput(true);
 

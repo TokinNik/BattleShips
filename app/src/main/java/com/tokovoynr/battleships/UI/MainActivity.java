@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
                 setFragment(PreGameFragment.TAG);
                 break;
             case R.id.button_settings2://TODO удалить после тестов
+                gameLogic.setGameMode(GameLogic.GameMode.PvE);
                 setFragment(GameFragment.TAG);
                 break;
             case R.id.button_shop:
@@ -250,10 +251,10 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
     @Override
     public void onListFragmentJoin(LobbyContent.LobbyItem item)
     {
-        if(connection.joinToLobby(item.lobbyName))
+        if(/*connection.joinToLobby(item.lobbyName)*/false)
         {
             setFragment(PreGameFragment.TAG);
-            gameLogic.setGameMode(GameLogic.GameMode.PvP);
+            gameLogic.setGameMode(GameLogic.GameMode.PvE);
         }
         else
         {
@@ -277,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
                 //gameLogic.getConnector().executeGet("123 test 321");
                 break;
             case R.id.button_new_lobby:
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                /*AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
                 {
                     @Override
@@ -299,7 +300,7 @@ public class MainActivity extends AppCompatActivity implements SettingsFragment.
                 builder.setMessage(R.string.create_lobby_message);
                 builder.setCancelable(false);
                 AlertDialog wimDialog = builder.create();
-                wimDialog.show();
+                wimDialog.show();*/
                 break;
             default:
                 break;

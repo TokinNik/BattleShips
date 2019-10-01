@@ -162,7 +162,7 @@ public class GameFragment extends Fragment implements View.OnClickListener, Cell
             MainActivity.getGameLogic().setShip(109, 2, Ship.ShipDirection.UP, true);
             MainActivity.getGameLogic().setShip(111, 2, Ship.ShipDirection.UP, true);
             MainActivity.getGameLogic().setShip(29, 3, Ship.ShipDirection.UP, true);
-            MainActivity.getGameLogic().setShip(103, 3, Ship.ShipDirection.UP, false);
+            MainActivity.getGameLogic().setShip(103, 3, Ship.ShipDirection.UP, true);
             MainActivity.getGameLogic().setShip(105, 4, Ship.ShipDirection.UP, true);
             MainActivity.getGameLogic().setShip(106, 5, Ship.ShipDirection.UP, true);
             MainActivity.getGameLogic().setShip(107, 5, Ship.ShipDirection.UP, true);

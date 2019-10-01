@@ -887,7 +887,7 @@ public class GameLogic
             enemyShips[i].clear();
         }
 
-        gameMode = GameMode.PvP;
+        //gameMode = GameMode.PvP;
         enemyBot.clear();
         minePause = false;
         playerTurn = true;
